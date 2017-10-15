@@ -1,0 +1,53 @@
+﻿<Page
+    x:Class="GraphicsProject.Views.Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <SplitView x:Name="MySplitView" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
+               CompactPaneLength="50" OpenPaneLength="150">
+        <SplitView.Pane>
+            <StackPanel Background="Gray">
+                <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                        Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton1" FontFamily="Segoe MDL2 Assets" Content="&#xE1DA;"
+                            Width="50" Height="50" Background="Transparent"/>
+                    <TextBlock Text="Nowy" FontSize="18" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton2" FontFamily="Segoe MDL2 Assets" Content="&#xE197;"
+                            Width="50" Height="50" Background="Transparent"/>
+                    <TextBlock Text="Otwórz" FontSize="18" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton3" FontFamily="Segoe MDL2 Assets" Content="&#xE105;"
+                            Width="50" Height="50" Background="Transparent"/>
+                    <TextBlock Text="Zapisz" FontSize="18" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="7*"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+
+                </Grid>
+                <Grid Row="1" Background="Gray">
+                    <Canvas Name="DrawingCanvas" Background="White" Width="1024" Height="768" 
+                            PointerPressed="Canvas_OnPointerPressed" 
+                            PointerReleased="Canvas_OnPointerReleased" 
+                            PointerMoved="Canvas_OnPointerMoved">
+                        <!--<Ellipse Name="MyEllipse" ManipulationMode="TranslateX, TranslateY, Scale"
+                                 Fill="Aqua" Width="100" Height="100" Canvas.Left="844" Canvas.Top="232" />-->
+                    </Canvas>
+                </Grid>
+            </Grid>
+        </SplitView.Content>
+    </SplitView>
+</Page>
