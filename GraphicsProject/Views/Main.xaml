@@ -47,11 +47,28 @@
                     </Canvas>
                     <Grid Grid.Column="1" Background="Silver">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
                             <RowDefinition Height="3*"/>
                             <RowDefinition Height="3*"/>
                             <RowDefinition Height="5*"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image Source="../Assets/line.png"></Image>
+                            </Button>
+                            <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image Source="../Assets/rectangle.png"></Image>
+                            </Button>
+                            <Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image Source="../Assets/ellipse.png"></Image>
+                            </Button>
+                        </Grid>
+                        <Grid Grid.Row="1">
                             <Grid Padding="0,0,30,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -95,7 +112,7 @@
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="3">
                             <controls:ColorPicker Name="ColorPicker"  ColorChanged="Colorpick_ColorChanged" Color="Red" Visibility="Visible" />
                         </Grid>
                     </Grid>

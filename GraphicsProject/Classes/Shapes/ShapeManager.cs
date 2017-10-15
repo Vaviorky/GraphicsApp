@@ -8,7 +8,7 @@ using GraphicsProject.Enums;
 
 namespace GraphicsProject.Classes.Shapes
 {
-    class ShapeManager
+    internal class ShapeManager
     {
         public event Action<Shape> OnShapeParameterChange = delegate { };
 
@@ -88,7 +88,5 @@ namespace GraphicsProject.Classes.Shapes
                 Canvas.SetZIndex(_shapes[i], 0);
             }
         }
-
-        
     }
 }
