@@ -9,58 +9,62 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using GraphicsProject.Enums;
 
 namespace GraphicsProject.Classes.Shapes
 {
     class CurrentShape
     {
-        private Shape _currentShape;
+        public bool IsDragging { get; private set; }
+
+        public Shape SelectedShape { get; private set; }
+
         private CompositeTransform _currentCompositeTransform;
         private readonly Random _random = new Random();
         private readonly LineManager _lineManager = new LineManager();
         private readonly ShapeResizer _shapeResizer = new ShapeResizer();
         private readonly ShapePointer _shapePointer = new ShapePointer();
-
         private Point _startingPoint;
 
-        private bool isLine = false;
-        public bool IsDragging { get; private set; }
+        private ShapeMouseEventType _mouseType;
+
+        private bool _isLine = false;
 
         public event Action OnElementStartModifying = delegate { };
+        public event Action OnDeleteShape = delegate { };
+        public event Action<Shape> OnShapeParameterChange = delegate { };
 
         public void Create(Shape shape, Point position)
         {
-            _currentShape = shape;
+            SelectedShape = shape;
             _startingPoint = position;
 
-            if (_currentShape is Line)
+            if (SelectedShape is Line)
             {
-                isLine = true;
+                _isLine = true;
             }
 
-            AssignEventsToShapeObject(_currentShape);
-            _currentShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
+            AssignEventsToShapeObject(SelectedShape);
+            SelectedShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
 
-            _currentShape.Width = 0;
-            _currentShape.Height = 0;
+            SelectedShape.Width = 0;
+            SelectedShape.Height = 0;
 
-            Debug.WriteLine("Created");
+            Debug.WriteLine("Created new shape");
 
-            Canvas.SetLeft(_currentShape, position.X);
-            Canvas.SetTop(_currentShape, position.Y);
+            Canvas.SetLeft(SelectedShape, position.X);
+            Canvas.SetTop(SelectedShape, position.Y);
         }
 
         public void Resize(Point newPosition)
         {
-            _shapeResizer.Resize(_currentShape, _startingPoint, newPosition);
-
-            if (isLine)
+            _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
+            OnShapeParameterChange(SelectedShape);
+            if (_isLine)
             {
-                var line = _currentShape as Line;
+                var line = SelectedShape as Line;
                 line.X1 = 0;
                 line.Y1 = 0;
-
-                Debug.WriteLine(line.Width + " " + line.Height);
 
                 line.X2 = line.Width;
                 line.Y2 = line.Height;
@@ -71,31 +75,57 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
         {
+            Debug.WriteLine("On mouse down on object");
             IsDragging = true;
             OnElementStartModifying();
-            _currentShape = (Shape)sender;
-            _currentCompositeTransform = _currentShape.RenderTransform as CompositeTransform;
-            Canvas.SetZIndex(_currentShape, 2);
+            SelectedShape = (Shape)sender;
+            OnShapeParameterChange(SelectedShape);
+            _startingPoint = e.GetCurrentPoint(SelectedShape).Position;
+            Debug.WriteLine(_startingPoint);
+            _currentCompositeTransform = SelectedShape.RenderTransform as CompositeTransform;
+            Canvas.SetZIndex(SelectedShape, 2);
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            Debug.WriteLine("Ellipse manipulation started");
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeAll, 0);
-            this._currentShape.Opacity = 0.4;
+            Debug.WriteLine("Shape manipulation started");
+            _mouseType = _shapePointer.MouseType;
+
+            Debug.WriteLine("Mouse type: " + _shapePointer.MouseType);
+            this.SelectedShape.Opacity = 0.4;
         }
 
         private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            _currentCompositeTransform.TranslateX += e.Delta.Translation.X;
-            _currentCompositeTransform.TranslateY += e.Delta.Translation.Y;
+            //Debug.WriteLine("Mouse sadsada type: " + _shapePointer.MouseType);
+            OnShapeParameterChange(SelectedShape);
+
+            switch (_mouseType)
+            {
+                case ShapeMouseEventType.Dragging:
+                    _currentCompositeTransform.TranslateX += e.Delta.Translation.X;
+                    _currentCompositeTransform.TranslateY += e.Delta.Translation.Y;
+                    break;
+                case ShapeMouseEventType.SizeLeftRigt:
+                    _shapeResizer.ResizeX(SelectedShape, _startingPoint.X, e.Position.X);
+                    break;
+                case ShapeMouseEventType.SizeUpDown:
+                    _shapeResizer.ResizeY(SelectedShape, _startingPoint.Y, e.Position.Y);
+                    break;
+                case ShapeMouseEventType.SizeLeftUpRightDown:
+                    break;
+                case ShapeMouseEventType.SizeLeftDownRightUp:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             Debug.WriteLine("Manipulation of ellipse finished");
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
-            this._currentShape.Opacity = 1;
+            this.SelectedShape.Opacity = 1;
         }
 
         private void OnMouseUp(object sender, PointerRoutedEventArgs e)
@@ -109,7 +139,11 @@ namespace GraphicsProject.Classes.Shapes
             var shiftIsPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift)
                 .HasFlag(CoreVirtualKeyStates.Down);
 
-            if (!shiftIsPressed) return;
+            if (!shiftIsPressed)
+            {
+                _shapePointer.ResetPointer();
+                return;
+            }
 
             var shape = (Shape)sender;
             var mousePos = e.GetCurrentPoint(shape).Position;
@@ -124,19 +158,23 @@ namespace GraphicsProject.Classes.Shapes
             shape.PointerPressed += OnMouseDown;
             shape.PointerReleased += OnMouseUp;
             shape.PointerMoved += OnMouseOn;
-            shape.PointerExited += (sender, args) => _shapePointer.ResetPointer();
+            // shape.PointerExited += (sender, args) => _shapePointer.ResetPointer();
 
             shape.ManipulationMode =
                 ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.Scale;
             shape.ManipulationStarted += OnManipulationStarted;
             shape.ManipulationDelta += OnManipulationDelta;
             shape.ManipulationCompleted += OnManipulationCompleted;
+            shape.RightTapped += (sender, args) => OnDeleteShape();
             shape.DoubleTapped += (sender, args) => Debug.WriteLine("DOUBLE TAP!!");
         }
 
         public void ChangeColor(Color color)
         {
-            _currentShape.Fill = new SolidColorBrush(color);
+            if (SelectedShape != null)
+            {
+                SelectedShape.Fill = new SolidColorBrush(color);
+            }
         }
     }
 }

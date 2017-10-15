@@ -32,12 +32,7 @@
         </SplitView.Pane>
         <SplitView.Content>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="7*"/>
-                </Grid.RowDefinitions>
-                
-                <Grid Row="1" Background="Gray">
+                <Grid Row="0" Background="Gray">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
@@ -45,23 +40,66 @@
                     <Canvas Grid.Column="0" Name="DrawingCanvas" Background="White"
                             PointerPressed="Canvas_OnPointerPressed" 
                             PointerReleased="Canvas_OnPointerReleased" 
-                            PointerMoved="Canvas_OnPointerMoved">
+                            PointerMoved="Canvas_OnPointerMoved"
+                            KeyDown="DrawingCanvas_OnKeyDown">
                         <!--<Line Name="MyEllipse" ManipulationMode="TranslateX, TranslateY, Scale" X1="0" X2="100" Y1="0" Y2="100" Stroke="Black"
                                  Fill="Aqua" Width="100" Height="100" Canvas.Left="844" Canvas.Top="232" />-->
                     </Canvas>
                     <Grid Grid.Column="1" Background="Silver">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="3*"></RowDefinition>
-                            <RowDefinition Height="3*"></RowDefinition>
-                            <RowDefinition Height="5*"></RowDefinition>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="5*"/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0"></Grid>
+                        <Grid Grid.Row="0">
+                            <Grid Padding="0,0,30,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X:"/>
+                                    <TextBox Name="XPosition" Grid.Column="1" KeyDown="XPosition_OnKeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y:"/>
+                                    <TextBox Name="YPosition" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Szer:"/>
+                                    <TextBox Name="Width" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50" Text="12313"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Wys:"/>
+                                    <TextBox Name="Height" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                         <Grid Grid.Row="2">
-                            <controls:ColorPicker x:Name="Colorpick"  ColorChanged="Colorpick_ColorChanged" Visibility="Visible" />
+                            <controls:ColorPicker Name="ColorPicker"  ColorChanged="Colorpick_ColorChanged" Color="Red" Visibility="Visible" />
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid Row="0" Background="Black"/>
             </Grid>
         </SplitView.Content>
     </SplitView>

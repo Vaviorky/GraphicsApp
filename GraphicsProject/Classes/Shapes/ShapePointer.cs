@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -18,12 +19,12 @@ namespace GraphicsProject.Classes.Shapes
 
         public void CheckMousePosition(double width, double height, Point mousePos)
         {
-            if (mousePos.X < 10 || mousePos.X > width - 10)
+            if (mousePos.X <= 10 || mousePos.X > width - 10)
             {
                 MouseType = ShapeMouseEventType.SizeLeftRigt;
                 Window.Current.CoreWindow.PointerCursor = _sizeWestEastCursor;
             }
-            else if (mousePos.Y < 10 || mousePos.Y > height - 10)
+            else if (mousePos.Y <= 10 || mousePos.Y > height - 10)
             {
                 MouseType = ShapeMouseEventType.SizeUpDown;
                 Window.Current.CoreWindow.PointerCursor = _sizeNorthSouthCursor;
