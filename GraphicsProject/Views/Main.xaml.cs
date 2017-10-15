@@ -5,12 +5,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 namespace GraphicsProject.Views
 {
@@ -35,6 +32,7 @@ namespace GraphicsProject.Views
 
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            _isDrawing = true;
             Debug.WriteLine("Canvas Mouse Pressed");
             var point = e.GetCurrentPoint(DrawingCanvas);
             _shapeManager.CreateNewShape(_shapeType, point.Position);
@@ -42,17 +40,17 @@ namespace GraphicsProject.Views
 
         private void Canvas_OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            Debug.WriteLine("Canvas mouse up");
             _isDrawing = false;
+            Debug.WriteLine("Canvas mouse up");
         }
 
         private void Canvas_OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            //Debug.WriteLine(e.GetCurrentPoint(DrawingCanvas).Position.X + " " + e.GetCurrentPoint(DrawingCanvas).Position.Y);
+            if (!_isDrawing) return;
 
-            if (_isDrawing)
+            if (_shapeManager.CanModifyShape())
             {
-                // Debug.WriteLine();
+                _shapeManager.ModifyCreatedShape(e.GetCurrentPoint(DrawingCanvas).Position);
             }
         }
     }

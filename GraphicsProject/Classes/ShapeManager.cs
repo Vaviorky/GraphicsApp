@@ -14,28 +14,36 @@ namespace GraphicsProject.Classes
     {
         private readonly Canvas _canvas;
         private readonly CurrentShape _currentShape;
+        private readonly List<Shape> _shapes;
 
         public ShapeManager(Canvas canvas)
         {
             _canvas = canvas;
-            this._currentShape = new CurrentShape();
+            _currentShape = new CurrentShape();
+            _shapes = new List<Shape>();
+            _currentShape.OnElementStartModifying += ResetCanvasIndexOfElements;
+        }
+
+        public bool CanModifyShape()
+        {
+            return !_currentShape.IsDragging;
         }
 
         public void CreateNewShape(ShapeType shapeType, Point position)
         {
-            if (_currentShape.IsDragging) return;
+            if (!CanModifyShape()) return;
 
             var shape = GetCurrentShape(shapeType);
+            _shapes.Add(shape);
             _currentShape.Create(shape, position);
 
             _canvas.Children.Add(shape);
         }
 
-        public void ModifyCreatedShape()
+        public void ModifyCreatedShape(Point newPosition)
         {
-           // _currentShape.
+            _currentShape.Modify(newPosition);
         }
-
 
         private Shape GetCurrentShape(ShapeType shapeType)
         {
@@ -49,6 +57,15 @@ namespace GraphicsProject.Classes
                     return new Rectangle();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
+            }
+        }
+
+        private void ResetCanvasIndexOfElements()
+        {
+            var listIndex = _shapes.Count;
+            for (int i = 0; i < listIndex; i++)
+            {
+                Canvas.SetZIndex(_shapes[i], 0);
             }
         }
     }

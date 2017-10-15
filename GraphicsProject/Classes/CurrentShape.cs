@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Foundation;
@@ -17,6 +16,10 @@ namespace GraphicsProject.Classes
         private CompositeTransform _currentCompositeTransform;
         private readonly Random _random;
 
+        private Point _startingPoint;
+
+        private bool isLine = false;
+
         public bool IsDragging;
 
         public CurrentShape()
@@ -24,16 +27,71 @@ namespace GraphicsProject.Classes
             _random = new Random();
         }
 
+        public event Action OnElementStartModifying = delegate { };
+
         public void Create(Shape shape, Point position)
         {
-            AssignEventsToShapeObject(shape);
-            shape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
+            _currentShape = shape;
 
-            shape.Width = 30;
-            shape.Height = 30;
+            if (_currentShape is Line)
+            {
+                isLine = true;
+            }
 
-            Canvas.SetLeft(shape, position.X);
-            Canvas.SetTop(shape, position.Y);
+            AssignEventsToShapeObject(_currentShape);
+            _currentShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
+
+            _currentShape.Width = 1;
+            _currentShape.Height = 1;
+
+            _startingPoint = position;
+
+            Debug.WriteLine("Created");
+
+            Canvas.SetLeft(_currentShape, position.X);
+            Canvas.SetTop(_currentShape, position.Y);
+        }
+
+        public void Modify(Point newPosition)
+        {
+            var width = newPosition.X - _startingPoint.X;
+            var height = newPosition.Y - _startingPoint.Y;
+
+            if (width >= 0)
+            {
+                _currentShape.Width = width;
+            }
+
+            if (height >= 0)
+            {
+                _currentShape.Height = height;
+            }
+
+            if (width < 0)
+            {
+                Canvas.SetLeft(_currentShape, newPosition.X);
+                _currentShape.Width = _startingPoint.X - newPosition.X;
+            }
+
+            if (height < 0)
+            {
+                Canvas.SetTop(_currentShape, newPosition.Y);
+                _currentShape.Height = _startingPoint.Y - newPosition.Y;
+            }
+
+            if (isLine)
+            {
+                var line = _currentShape as Line;
+                line.X1 = 0;
+                line.Y1 = 0;
+
+                Debug.WriteLine(line.Width + " " + line.Height);
+
+                line.X2 = line.Width;
+                line.Y2 = line.Height;
+                line.StrokeThickness = 5;
+                line.Stroke = new SolidColorBrush(Color.FromArgb(0,55,55,55));
+            }
         }
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
@@ -45,6 +103,8 @@ namespace GraphicsProject.Classes
         {
             Debug.WriteLine("Ellipse manipulation started");
             _currentShape = (Shape)sender;
+            OnElementStartModifying();
+            Canvas.SetZIndex(_currentShape, 2);
             _currentCompositeTransform = _currentShape.RenderTransform as CompositeTransform;
             this._currentShape.Opacity = 0.4;
         }
@@ -79,6 +139,7 @@ namespace GraphicsProject.Classes
             shape.ManipulationStarted += OnManipulationStarted;
             shape.ManipulationDelta += OnManipulationDelta;
             shape.ManipulationCompleted += OnManipulationCompleted;
+            shape.DoubleTapped += (sender, args) => Debug.WriteLine("DOUBLE TAP!!");
         }
     }
 }
