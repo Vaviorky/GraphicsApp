@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Windows.Foundation;
+using Windows.UI;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Enums;
-using System.Diagnostics;
-using Windows.Foundation;
-using Windows.UI.Xaml.Controls;
 
-namespace GraphicsProject.Classes
+namespace GraphicsProject.Classes.Shapes
 {
-    public class ShapeManager
+    class ShapeManager
     {
         private readonly Canvas _canvas;
         private readonly CurrentShape _currentShape;
@@ -33,6 +31,8 @@ namespace GraphicsProject.Classes
         {
             if (!CanModifyShape()) return;
 
+            ResetCanvasIndexOfElements();
+
             var shape = GetCurrentShape(shapeType);
             _shapes.Add(shape);
             _currentShape.Create(shape, position);
@@ -42,7 +42,7 @@ namespace GraphicsProject.Classes
 
         public void ModifyCreatedShape(Point newPosition)
         {
-            _currentShape.Modify(newPosition);
+            _currentShape.Resize(newPosition);
         }
 
         private Shape GetCurrentShape(ShapeType shapeType)
@@ -67,6 +67,11 @@ namespace GraphicsProject.Classes
             {
                 Canvas.SetZIndex(_shapes[i], 0);
             }
+        }
+
+        public void ChangeColorOfSelectedShape(Color color)
+        {
+            _currentShape.ChangeColor(color);
         }
     }
 }

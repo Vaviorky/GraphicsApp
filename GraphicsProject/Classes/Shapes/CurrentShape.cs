@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace GraphicsProject.Classes
+namespace GraphicsProject.Classes.Shapes
 {
-    public class CurrentShape
+    class CurrentShape
     {
         private Shape _currentShape;
         private CompositeTransform _currentCompositeTransform;
-        private readonly Random _random;
+        private readonly Random _random = new Random();
+        private readonly LineManager _lineManager = new LineManager();
+        private readonly ShapeResizer _shapeResizer = new ShapeResizer();
+        private readonly ShapePointer _shapePointer = new ShapePointer();
 
         private Point _startingPoint;
 
         private bool isLine = false;
-
-        public bool IsDragging;
-
-        public CurrentShape()
-        {
-            _random = new Random();
-        }
+        public bool IsDragging { get; private set; }
 
         public event Action OnElementStartModifying = delegate { };
 
         public void Create(Shape shape, Point position)
         {
             _currentShape = shape;
+            _startingPoint = position;
 
             if (_currentShape is Line)
             {
@@ -41,10 +41,8 @@ namespace GraphicsProject.Classes
             AssignEventsToShapeObject(_currentShape);
             _currentShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
 
-            _currentShape.Width = 1;
-            _currentShape.Height = 1;
-
-            _startingPoint = position;
+            _currentShape.Width = 0;
+            _currentShape.Height = 0;
 
             Debug.WriteLine("Created");
 
@@ -52,32 +50,9 @@ namespace GraphicsProject.Classes
             Canvas.SetTop(_currentShape, position.Y);
         }
 
-        public void Modify(Point newPosition)
+        public void Resize(Point newPosition)
         {
-            var width = newPosition.X - _startingPoint.X;
-            var height = newPosition.Y - _startingPoint.Y;
-
-            if (width >= 0)
-            {
-                _currentShape.Width = width;
-            }
-
-            if (height >= 0)
-            {
-                _currentShape.Height = height;
-            }
-
-            if (width < 0)
-            {
-                Canvas.SetLeft(_currentShape, newPosition.X);
-                _currentShape.Width = _startingPoint.X - newPosition.X;
-            }
-
-            if (height < 0)
-            {
-                Canvas.SetTop(_currentShape, newPosition.Y);
-                _currentShape.Height = _startingPoint.Y - newPosition.Y;
-            }
+            _shapeResizer.Resize(_currentShape, _startingPoint, newPosition);
 
             if (isLine)
             {
@@ -90,22 +65,23 @@ namespace GraphicsProject.Classes
                 line.X2 = line.Width;
                 line.Y2 = line.Height;
                 line.StrokeThickness = 5;
-                line.Stroke = new SolidColorBrush(Color.FromArgb(0,55,55,55));
+                line.Stroke = new SolidColorBrush(Color.FromArgb(0, 55, 55, 55));
             }
         }
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
         {
             IsDragging = true;
+            OnElementStartModifying();
+            _currentShape = (Shape)sender;
+            _currentCompositeTransform = _currentShape.RenderTransform as CompositeTransform;
+            Canvas.SetZIndex(_currentShape, 2);
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             Debug.WriteLine("Ellipse manipulation started");
-            _currentShape = (Shape)sender;
-            OnElementStartModifying();
-            Canvas.SetZIndex(_currentShape, 2);
-            _currentCompositeTransform = _currentShape.RenderTransform as CompositeTransform;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeAll, 0);
             this._currentShape.Opacity = 0.4;
         }
 
@@ -118,6 +94,7 @@ namespace GraphicsProject.Classes
         private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             Debug.WriteLine("Manipulation of ellipse finished");
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             this._currentShape.Opacity = 1;
         }
 
@@ -127,12 +104,27 @@ namespace GraphicsProject.Classes
             IsDragging = false;
         }
 
+        private void OnMouseOn(object sender, PointerRoutedEventArgs e)
+        {
+            var shiftIsPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift)
+                .HasFlag(CoreVirtualKeyStates.Down);
+
+            if (!shiftIsPressed) return;
+
+            var shape = (Shape)sender;
+            var mousePos = e.GetCurrentPoint(shape).Position;
+
+            _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
+        }
+
         private void AssignEventsToShapeObject(Shape shape)
         {
             shape.RenderTransform = new CompositeTransform();
 
             shape.PointerPressed += OnMouseDown;
             shape.PointerReleased += OnMouseUp;
+            shape.PointerMoved += OnMouseOn;
+            shape.PointerExited += (sender, args) => _shapePointer.ResetPointer();
 
             shape.ManipulationMode =
                 ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.Scale;
@@ -140,6 +132,11 @@ namespace GraphicsProject.Classes
             shape.ManipulationDelta += OnManipulationDelta;
             shape.ManipulationCompleted += OnManipulationCompleted;
             shape.DoubleTapped += (sender, args) => Debug.WriteLine("DOUBLE TAP!!");
+        }
+
+        public void ChangeColor(Color color)
+        {
+            _currentShape.Fill = new SolidColorBrush(color);
         }
     }
 }

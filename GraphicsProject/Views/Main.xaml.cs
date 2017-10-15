@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using GraphicsProject.Classes.Shapes;
 
 namespace GraphicsProject.Views
 {
@@ -19,7 +21,7 @@ namespace GraphicsProject.Views
 
         public Main()
         {
-            this._shapeType = ShapeType.Rectangle;
+            this._shapeType = ShapeType.Circle;
             _isDrawing = false;
             this.InitializeComponent();
             this._shapeManager = new ShapeManager(DrawingCanvas);
@@ -52,6 +54,11 @@ namespace GraphicsProject.Views
             {
                 _shapeManager.ModifyCreatedShape(e.GetCurrentPoint(DrawingCanvas).Position);
             }
+        }
+
+        private void Colorpick_ColorChanged(object sender, Color color)
+        {
+            _shapeManager.ChangeColorOfSelectedShape(color);
         }
     }
 }
