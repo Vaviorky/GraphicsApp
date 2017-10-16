@@ -94,8 +94,8 @@ namespace GraphicsProject.Classes.Shapes
 
         private void ResetCanvasIndexOfElements()
         {
-            var listIndex = _shapes.Count;
-            for (int i = 0; i < listIndex; i++)
+            var listCount = _shapes.Count;
+            for (int i = 0; i < listCount; i++)
             {
                 Canvas.SetZIndex(_shapes[i], 0);
             }

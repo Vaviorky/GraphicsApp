@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace GraphicsProject.Classes.Shapes
 {
-    internal class ShapeDrawer
+    internal static class ShapeDrawer
     {
         public static void InitializeRectangle(Rectangle rectangle, Point startingPosition, Point endingPosition)
         {
@@ -25,17 +26,16 @@ namespace GraphicsProject.Classes.Shapes
 
         public static void InitializeCircle(Ellipse ellipse, Point startingPosition, Point endingPosition)
         {
-            var x = startingPosition.X < endingPosition.X ? startingPosition.X : endingPosition.X;
-            var y = startingPosition.Y < endingPosition.Y ? startingPosition.Y : endingPosition.Y;
+            var radius = Math.Sqrt(Math.Pow(endingPosition.X - startingPosition.X, 2) + 
+                Math.Pow(endingPosition.Y - startingPosition.Y, 2));
 
-            var width = Math.Abs(endingPosition.X - startingPosition.X);
-            var height = Math.Abs(endingPosition.Y - startingPosition.Y);
+            var size = 2 * radius;
 
-            ellipse.Width = width > height ? width : height;
-            ellipse.Height = width > height ? width : height;
+            ellipse.Width = size;
+            ellipse.Height = size;
 
-            Canvas.SetLeft(ellipse, x);
-            Canvas.SetTop(ellipse, y);
+            Canvas.SetLeft(ellipse, startingPosition.X - radius);
+            Canvas.SetTop(ellipse, startingPosition.Y - radius);
         }
 
         public static void InitializeLine(Line line, Point startingPosition, Point endingPosition)
@@ -56,6 +56,9 @@ namespace GraphicsProject.Classes.Shapes
             line.Height = height;
         }
 
-        
+        private static void AddSpecialPointsToLine(Line line, Point startingPoint, Point endingPoint)
+        {
+
+        }
     }
 }

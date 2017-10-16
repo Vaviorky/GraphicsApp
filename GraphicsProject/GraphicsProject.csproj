@@ -96,7 +96,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
-    <Compile Include="Classes\Shapes\LineManager.cs" />
     <Compile Include="Classes\Shapes\ShapeDrawer.cs" />
     <Compile Include="Classes\Shapes\ShapeManager.cs" />
     <Compile Include="Classes\Shapes\ShapeResizer.cs" />
@@ -144,6 +143,9 @@
     <PackageReference Include="Xamarin.Forms">
       <Version>2.3.4.247</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\Shapes\Helpers\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
