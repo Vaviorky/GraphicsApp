@@ -20,57 +20,67 @@ namespace GraphicsProject.Classes.Shapes
         public Shape SelectedShape { get; private set; }
 
         private CompositeTransform _currentCompositeTransform;
-        private readonly Random _random = new Random();
-        private readonly LineManager _lineManager = new LineManager();
         private readonly ShapeResizer _shapeResizer = new ShapeResizer();
         private readonly ShapePointer _shapePointer = new ShapePointer();
         private Point _startingPoint;
+        private Point _endingPoint;
 
         private ShapeMouseEventType _mouseType;
-
-        private bool _isLine = false;
 
         public event Action OnElementStartModifying = delegate { };
         public event Action OnDeleteShape = delegate { };
         public event Action<Shape> OnShapeParameterChange = delegate { };
 
-        public void Create(Shape shape, Point position)
+        public void Create(Shape shape, Point startingPosition, Point endingPosition)
         {
             SelectedShape = shape;
-            _startingPoint = position;
+            PrepareShape(shape);
 
-            if (SelectedShape is Line)
+            switch (shape)
             {
-                _isLine = true;
+                case Line line:
+                    ShapeDrawer.InitializeLine(line, startingPosition, endingPosition);
+                    break;
+                case Rectangle rectangle:
+                    ShapeDrawer.InitializeRectangle(rectangle, startingPosition, endingPosition);
+                    break;
+                case Ellipse ellipse:
+                    ShapeDrawer.InitializeCircle(ellipse, startingPosition, endingPosition);
+                    break;
             }
 
-            AssignEventsToShapeObject(SelectedShape);
-            SelectedShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
+            _startingPoint = startingPosition;
 
-            SelectedShape.Width = 0;
-            SelectedShape.Height = 0;
-
-            Debug.WriteLine("Created new shape");
-
-            Canvas.SetLeft(SelectedShape, position.X);
-            Canvas.SetTop(SelectedShape, position.Y);
+            //if (SelectedShape is Line line)
+            //{
+            //    Canvas.SetLeft(line, 0);
+            //    Canvas.SetTop(line, 0);
+            //    line.X1 = _startingPoint.X;
+            //    line.Y1 = _startingPoint.Y;
+            //}
+            //else
+            //{
+            //    SetPositionAndSizeOfRectangle(startingPosition, endingPosition);
+            //}
         }
 
         public void Resize(Point newPosition)
         {
-            _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
-            OnShapeParameterChange(SelectedShape);
-            if (_isLine)
+            if (SelectedShape is Line line)
             {
-                var line = SelectedShape as Line;
-                line.X1 = 0;
-                line.Y1 = 0;
-
-                line.X2 = line.Width;
-                line.Y2 = line.Height;
-                line.StrokeThickness = 5;
-                line.Stroke = new SolidColorBrush(Color.FromArgb(0, 55, 55, 55));
+                line.X2 = newPosition.X;
+                line.Y2 = newPosition.Y;
             }
+            else
+            {
+                _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
+                OnShapeParameterChange(SelectedShape);
+            }
+        }
+
+        private void SetPositionAndSizeOfRectangle(Point startingPosition, Point endingPosition)
+        {
+            
         }
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
@@ -97,7 +107,6 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            //Debug.WriteLine("Mouse sadsada type: " + _shapePointer.MouseType);
             OnShapeParameterChange(SelectedShape);
 
             switch (_mouseType)
@@ -151,30 +160,20 @@ namespace GraphicsProject.Classes.Shapes
             _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
         }
 
-        private void AssignEventsToShapeObject(Shape shape)
+        private void PrepareShape(Shape shape)
         {
             shape.RenderTransform = new CompositeTransform();
 
             shape.PointerPressed += OnMouseDown;
             shape.PointerReleased += OnMouseUp;
             shape.PointerMoved += OnMouseOn;
-            // shape.PointerExited += (sender, args) => _shapePointer.ResetPointer();
 
             shape.ManipulationMode =
-                ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.Scale;
+                ManipulationModes.TranslateX | ManipulationModes.TranslateY;
             shape.ManipulationStarted += OnManipulationStarted;
             shape.ManipulationDelta += OnManipulationDelta;
             shape.ManipulationCompleted += OnManipulationCompleted;
             shape.RightTapped += (sender, args) => OnDeleteShape();
-            shape.DoubleTapped += (sender, args) => Debug.WriteLine("DOUBLE TAP!!");
-        }
-
-        public void ChangeColor(Color color)
-        {
-            if (SelectedShape != null)
-            {
-                SelectedShape.Fill = new SolidColorBrush(color);
-            }
         }
     }
 }

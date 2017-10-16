@@ -5,6 +5,8 @@ using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Enums;
+using System.Diagnostics;
+using Windows.UI.Xaml.Media;
 
 namespace GraphicsProject.Classes.Shapes
 {
@@ -36,7 +38,7 @@ namespace GraphicsProject.Classes.Shapes
             return !_currentShape.IsDragging;
         }
 
-        public void CreateNewShape(ShapeType shapeType, Point position)
+        public void CreateNewShape(ShapeType shapeType, Point startingPosition, Point endingPosition)
         {
             if (!CanModifyShape()) return;
 
@@ -44,7 +46,7 @@ namespace GraphicsProject.Classes.Shapes
 
             var shape = GetCurrentShape(shapeType);
             _shapes.Add(shape);
-            _currentShape.Create(shape, position);
+            _currentShape.Create(shape, startingPosition, endingPosition);
 
             _canvas.Children.Add(shape);
         }
@@ -54,21 +56,31 @@ namespace GraphicsProject.Classes.Shapes
             _currentShape.Resize(newPosition);
         }
 
-        public void ChangeColorOfSelectedShape(Color color)
-        {
-            _currentShape.ChangeColor(color);
-        }
-
         private Shape GetCurrentShape(ShapeType shapeType)
         {
             switch (shapeType)
             {
                 case ShapeType.Line:
-                    return new Line();
+                    var line = new Line
+                    {
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        StrokeThickness = 3
+                    };
+                    return line;
+
                 case ShapeType.Circle:
-                    return new Ellipse();
+                    var ellipse = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Colors.DodgerBlue)
+                    };
+                    return ellipse;
+
                 case ShapeType.Rectangle:
-                    return new Rectangle();
+                    var rectangle = new Rectangle
+                    {
+                        Fill = new SolidColorBrush(Colors.SeaGreen)
+                    };
+                    return rectangle;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, null);
             }

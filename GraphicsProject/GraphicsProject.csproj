@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
     <Compile Include="Classes\Shapes\LineManager.cs" />
+    <Compile Include="Classes\Shapes\ShapeDrawer.cs" />
     <Compile Include="Classes\Shapes\ShapeManager.cs" />
     <Compile Include="Classes\Shapes\ShapeResizer.cs" />
     <Compile Include="Classes\Shapes\ShapePointer.cs" />
@@ -112,7 +113,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="GraphicsProject_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\ellipse.png" />
@@ -138,9 +138,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Coding4Fun.Toolkit.Controls">
-      <Version>2.1.8</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>5.4.0</Version>
     </PackageReference>

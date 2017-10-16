@@ -1,11 +1,6 @@
-﻿using GraphicsProject.Classes;
-using GraphicsProject.Enums;
-using System;
-using System.Collections.Generic;
+﻿using GraphicsProject.Enums;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -19,15 +14,18 @@ namespace GraphicsProject.Views
 {
     public sealed partial class Main : Page
     {
-        private bool _isDrawing;
-        private readonly ShapeType _shapeType;
+        private ShapeType _shapeType;
         private readonly ShapeManager _shapeManager;
+        private Point _startingPoint;
+        private Point _endingPoint;
+
+        private bool canFinishCreatingShape = true;
 
         public Main()
         {
-            this._shapeType = ShapeType.Rectangle;
-            _isDrawing = false;
             this.InitializeComponent();
+            this._shapeType = ShapeType.Circle;
+            ButtonRectangleSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
             this._shapeManager = new ShapeManager(DrawingCanvas);
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
         }
@@ -35,12 +33,11 @@ namespace GraphicsProject.Views
         private void UpdateTextFields(Shape shape)
         {
             var cs = shape.TransformToVisual(DrawingCanvas);
-            Point point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
+            var point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
             XPosition.Text = point.X.ToString(CultureInfo.InvariantCulture);
             YPosition.Text = point.Y.ToString(CultureInfo.InvariantCulture);
             Width.Text = shape.Width.ToString(CultureInfo.InvariantCulture);
             Height.Text = shape.Height.ToString(CultureInfo.InvariantCulture);
-            ColorPicker.Color = ((SolidColorBrush)shape.Fill).Color;
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -50,36 +47,27 @@ namespace GraphicsProject.Views
 
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _isDrawing = true;
-            Debug.WriteLine("Canvas Mouse Pressed");
-            var point = e.GetCurrentPoint(DrawingCanvas);
-            _shapeManager.CreateNewShape(_shapeType, point.Position);
+            //if overall can draw, needs to be added
+            if (canFinishCreatingShape)
+            {
+                _startingPoint = e.GetCurrentPoint(DrawingCanvas).Position;
+                canFinishCreatingShape = false;
+            }
+            else
+            {
+                _endingPoint = e.GetCurrentPoint(DrawingCanvas).Position;
+                _shapeManager.CreateNewShape(_shapeType, _startingPoint, _endingPoint);
+                canFinishCreatingShape = true;
+            }
+
+
+            // var point = e.GetCurrentPoint(DrawingCanvas);
+            // _shapeManager.CreateNewShape(_shapeType, point.Position);
         }
 
         private void Canvas_OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            _isDrawing = false;
             Debug.WriteLine("Canvas mouse up");
-        }
-
-        private void Canvas_OnPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (!_isDrawing) return;
-
-            if (_shapeManager.CanModifyShape())
-            {
-                _shapeManager.ModifyCreatedShape(e.GetCurrentPoint(DrawingCanvas).Position);
-            }
-        }
-
-        private void Colorpick_ColorChanged(object sender, Color color)
-        {
-            _shapeManager.ChangeColorOfSelectedShape(color);
-        }
-
-        private void DrawingCanvas_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            Debug.WriteLine("asodijasoidjasiodjsioadioadioj");
         }
 
         private void XPosition_OnKeyDown(object sender, KeyRoutedEventArgs e)
@@ -90,6 +78,26 @@ namespace GraphicsProject.Views
                 return;
             }
             e.Handled = false;
+        }
+
+        private void Button_OnLineSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+            ButtonLineSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            _shapeType = ShapeType.Line;
+        }
+
+        private void Button_OnRectangleSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+
+            _shapeType = ShapeType.Rectangle;
+        }
+
+        private void Button_OnEllipseSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+            _shapeType = ShapeType.Circle;
         }
     }
 }
