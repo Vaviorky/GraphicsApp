@@ -20,14 +20,17 @@ namespace GraphicsProject.Views
     public sealed partial class Main : Page
     {
         private bool _isDrawing;
-        private readonly ShapeType _shapeType;
+        private ShapeType _shapeType;
         private readonly ShapeManager _shapeManager;
+        private Color _currentColor;
 
         public Main()
         {
-            this._shapeType = ShapeType.Rectangle;
-            _isDrawing = false;
             this.InitializeComponent();
+            _currentColor = ColorPicker.Color;
+            this._shapeType = ShapeType.Rectangle;
+            ButtonRectangleSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            _isDrawing = false;
             this._shapeManager = new ShapeManager(DrawingCanvas);
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
         }
@@ -51,9 +54,9 @@ namespace GraphicsProject.Views
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _isDrawing = true;
-            Debug.WriteLine("Canvas Mouse Pressed");
+            Debug.WriteLine("Canvas Mouse Pressed, ShapeType: " + _shapeType);
             var point = e.GetCurrentPoint(DrawingCanvas);
-            _shapeManager.CreateNewShape(_shapeType, point.Position);
+            _shapeManager.CreateNewShape(_shapeType, point.Position, ColorPicker.Color);
         }
 
         private void Canvas_OnPointerReleased(object sender, PointerRoutedEventArgs e)
@@ -90,6 +93,38 @@ namespace GraphicsProject.Views
                 return;
             }
             e.Handled = false;
+        }
+
+        private void Button_OnRectangleSelect(object sender, PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("OnRectangleSelect");
+            _shapeType = ShapeType.Rectangle;
+        }
+
+        private void Button_OnEllipseSelect(object sender, PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("OnEllipseSelect");
+            _shapeType = ShapeType.Circle;
+        }
+
+        private void Button_OnLineSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+            ButtonLineSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            _shapeType = ShapeType.Line;
+        }
+
+        private void Button_OnRectangleSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+
+            _shapeType = ShapeType.Rectangle;
+        }
+
+        private void Button_OnEllipseSelect(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("OnLineSelect");
+            _shapeType = ShapeType.Circle;
         }
     }
 }

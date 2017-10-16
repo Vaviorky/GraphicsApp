@@ -5,6 +5,8 @@ using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Enums;
+using System.Diagnostics;
+using Windows.UI.Xaml.Media;
 
 namespace GraphicsProject.Classes.Shapes
 {
@@ -36,7 +38,7 @@ namespace GraphicsProject.Classes.Shapes
             return !_currentShape.IsDragging;
         }
 
-        public void CreateNewShape(ShapeType shapeType, Point position)
+        public void CreateNewShape(ShapeType shapeType, Point position, Color color)
         {
             if (!CanModifyShape()) return;
 
@@ -44,7 +46,7 @@ namespace GraphicsProject.Classes.Shapes
 
             var shape = GetCurrentShape(shapeType);
             _shapes.Add(shape);
-            _currentShape.Create(shape, position);
+            _currentShape.Create(shape, position, color);
 
             _canvas.Children.Add(shape);
         }

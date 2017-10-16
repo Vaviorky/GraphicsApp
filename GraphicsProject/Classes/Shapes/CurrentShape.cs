@@ -34,23 +34,24 @@ namespace GraphicsProject.Classes.Shapes
         public event Action OnDeleteShape = delegate { };
         public event Action<Shape> OnShapeParameterChange = delegate { };
 
-        public void Create(Shape shape, Point position)
+        public void Create(Shape shape, Point position, Color color)
         {
             SelectedShape = shape;
             _startingPoint = position;
 
             if (SelectedShape is Line)
             {
+                var line = SelectedShape as Line;
+                line.Stroke = new SolidColorBrush(color);
+                line.StrokeThickness = 5;
                 _isLine = true;
             }
 
             AssignEventsToShapeObject(SelectedShape);
-            SelectedShape.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)_random.Next(0, 255), (byte)_random.Next(0, 255), (byte)_random.Next(0, 255)));
+            SelectedShape.Fill = new SolidColorBrush(color);
 
             SelectedShape.Width = 0;
             SelectedShape.Height = 0;
-
-            Debug.WriteLine("Created new shape");
 
             Canvas.SetLeft(SelectedShape, position.X);
             Canvas.SetTop(SelectedShape, position.Y);
@@ -58,18 +59,15 @@ namespace GraphicsProject.Classes.Shapes
 
         public void Resize(Point newPosition)
         {
-            _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
-            OnShapeParameterChange(SelectedShape);
-            if (_isLine)
+            if (SelectedShape is Line)
             {
                 var line = SelectedShape as Line;
-                line.X1 = 0;
-                line.Y1 = 0;
-
-                line.X2 = line.Width;
-                line.Y2 = line.Height;
-                line.StrokeThickness = 5;
-                line.Stroke = new SolidColorBrush(Color.FromArgb(0, 55, 55, 55));
+                _lineManager.ResizeOnStart(line, _startingPoint, newPosition);
+            }
+            else
+            {
+                _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
+                OnShapeParameterChange(SelectedShape);
             }
         }
 
@@ -97,7 +95,6 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            //Debug.WriteLine("Mouse sadsada type: " + _shapePointer.MouseType);
             OnShapeParameterChange(SelectedShape);
 
             switch (_mouseType)
