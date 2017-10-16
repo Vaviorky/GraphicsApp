@@ -1,4 +1,5 @@
-﻿using GraphicsProject.Enums;
+﻿using System;
+using GraphicsProject.Enums;
 using System.Diagnostics;
 using System.Globalization;
 using Windows.Foundation;
@@ -19,13 +20,12 @@ namespace GraphicsProject.Views
         private Point _startingPoint;
         private Point _endingPoint;
 
-        private bool canFinishCreatingShape = true;
+        private bool _canFinishCreatingShape = true;
 
         public Main()
         {
             this.InitializeComponent();
-            this._shapeType = ShapeType.Circle;
-            ButtonRectangleSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            this._shapeType = ShapeType.Line;
             this._shapeManager = new ShapeManager(DrawingCanvas);
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
         }
@@ -36,8 +36,8 @@ namespace GraphicsProject.Views
             var point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
             XPosition.Text = point.X.ToString(CultureInfo.InvariantCulture);
             YPosition.Text = point.Y.ToString(CultureInfo.InvariantCulture);
-            Width.Text = shape.Width.ToString(CultureInfo.InvariantCulture);
-            Height.Text = shape.Height.ToString(CultureInfo.InvariantCulture);
+
+
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -45,59 +45,128 @@ namespace GraphicsProject.Views
             MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
         }
 
+        #region CanvasEvents
+        
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
+
             //if overall can draw, needs to be added
-            if (canFinishCreatingShape)
+            if (_canFinishCreatingShape)
             {
                 _startingPoint = e.GetCurrentPoint(DrawingCanvas).Position;
-                canFinishCreatingShape = false;
+                _canFinishCreatingShape = false;
             }
             else
             {
                 _endingPoint = e.GetCurrentPoint(DrawingCanvas).Position;
                 _shapeManager.CreateNewShape(_shapeType, _startingPoint, _endingPoint);
-                canFinishCreatingShape = true;
+                _canFinishCreatingShape = true;
             }
-
-
-            // var point = e.GetCurrentPoint(DrawingCanvas);
-            // _shapeManager.CreateNewShape(_shapeType, point.Position);
         }
 
-        private void Canvas_OnPointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            Debug.WriteLine("Canvas mouse up");
-        }
+        #endregion
 
-        private void XPosition_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (!e.Key.ToString().Contains("Number"))
-            {
-                e.Handled = true;
-                return;
-            }
-            e.Handled = false;
-        }
+        #region ShapeButtonSelection
 
         private void Button_OnLineSelect(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("OnLineSelect");
-            ButtonLineSelect.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
             _shapeType = ShapeType.Line;
+            SelectButton(_shapeType);
         }
 
         private void Button_OnRectangleSelect(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("OnLineSelect");
-
             _shapeType = ShapeType.Rectangle;
+            SelectButton(_shapeType);
         }
 
         private void Button_OnEllipseSelect(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("OnLineSelect");
             _shapeType = ShapeType.Circle;
+            SelectButton(_shapeType);
         }
+
+        private void SelectButton(ShapeType type)
+        {
+            ButtonLineSelect.Background = new SolidColorBrush(Colors.ForestGreen);
+            ButtonEllipseSelect.Background = new SolidColorBrush(Colors.ForestGreen);
+            ButtonRectangleSelect.Background = new SolidColorBrush(Colors.ForestGreen);
+
+            LineProperties.Visibility = Visibility.Collapsed;
+            CircleProperties.Visibility = Visibility.Collapsed;
+            RectangleProperties.Visibility = Visibility.Collapsed;
+
+            switch (type)
+            {
+                case ShapeType.Line:
+                    ButtonLineSelect.Background = new SolidColorBrush(Colors.LawnGreen);
+                    LineProperties.Visibility = Visibility.Visible;
+                    break;
+                case ShapeType.Circle:
+                    ButtonEllipseSelect.Background = new SolidColorBrush(Colors.LawnGreen);
+                    CircleProperties.Visibility = Visibility.Visible;
+                    break;
+                case ShapeType.Rectangle:
+                    ButtonRectangleSelect.Background = new SolidColorBrush(Colors.LawnGreen);
+                    RectangleProperties.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    throw new NotImplementedException("You need to check for this shape type: " + type);
+            }
+        }
+
+        #endregion
+
+        #region ShapePropertiesChanged
+
+        private void Shape_PositionXChanged(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Shape_PositionYChanged(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Line_X1Changed(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Line_Y1Changed(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Line_X2Changed(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Line_Y2Changed(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Rectangle_WidthChanged(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Rectangle_HeightChanged(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        private void Circle_RadiusChanged(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
+
     }
 }

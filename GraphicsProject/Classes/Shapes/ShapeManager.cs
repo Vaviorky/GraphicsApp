@@ -48,6 +48,8 @@ namespace GraphicsProject.Classes.Shapes
             _shapes.Add(shape);
             _currentShape.Create(shape, startingPosition, endingPosition);
 
+            OnShapeParameterChange(shape);
+
             _canvas.Children.Add(shape);
         }
 

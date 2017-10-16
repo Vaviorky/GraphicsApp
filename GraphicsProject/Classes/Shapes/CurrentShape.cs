@@ -50,18 +50,6 @@ namespace GraphicsProject.Classes.Shapes
             }
 
             _startingPoint = startingPosition;
-
-            //if (SelectedShape is Line line)
-            //{
-            //    Canvas.SetLeft(line, 0);
-            //    Canvas.SetTop(line, 0);
-            //    line.X1 = _startingPoint.X;
-            //    line.Y1 = _startingPoint.Y;
-            //}
-            //else
-            //{
-            //    SetPositionAndSizeOfRectangle(startingPosition, endingPosition);
-            //}
         }
 
         public void Resize(Point newPosition)
