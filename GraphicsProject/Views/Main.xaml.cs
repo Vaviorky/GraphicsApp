@@ -10,7 +10,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Classes.Shapes;
-using Windows.UI.Core;
 
 namespace GraphicsProject.Views
 {
@@ -22,6 +21,7 @@ namespace GraphicsProject.Views
         private Point _endingPoint;
 
         private bool _canStartCreatingShape = true;
+        private bool _hasShapeBeenSelected = false;
         private bool _mouseDownOnCanvas;
 
         public Main()
@@ -29,13 +29,36 @@ namespace GraphicsProject.Views
             this.InitializeComponent();
             this._shapeType = ShapeType.Line;
             this._shapeManager = new ShapeManager(DrawingCanvas);
+            _shapeManager.OnShapeSelection += OnShapeSelection;
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
             _shapeManager.OnShapeModificationComplete += ResetDrawing;
+
+        }
+
+        private void OnShapeSelection(Shape shape)
+        {
+            switch (shape)
+            {
+                case Ellipse ellipse:
+                    _shapeType = ShapeType.Circle;
+                    break;
+                case Line line:
+                    _shapeType = ShapeType.Line;
+                    break;
+                case Rectangle rectangle:
+                    _shapeType = ShapeType.Rectangle;
+                    break;
+            }
+            SelectButton(_shapeType);
+            UpdateTextFields(shape);
+
+            Debug.WriteLine("Shape selection");
+
+            _hasShapeBeenSelected = true;
         }
 
         private void ResetDrawing()
         {
-            Debug.WriteLine("Reset drawing");
             _canStartCreatingShape = true;
         }
 
@@ -75,7 +98,7 @@ namespace GraphicsProject.Views
                     Rectangle_Height.Text = Math.Round(rectangle.Height, 2).ToString();
                     break;
                 case Ellipse circle:
-                    Circle_Radius.Text = (circle.Width / 2).ToString();
+                    Circle_Radius.Text = Math.Round(circle.Height, 2).ToString();
                     break;
             }
         }
@@ -92,13 +115,20 @@ namespace GraphicsProject.Views
             Debug.WriteLine("Canvas on pointer pressed");
             _mouseDownOnCanvas = true;
 
+            if (_hasShapeBeenSelected)
+            {
+                Debug.WriteLine("Shape has been selected");
+                _hasShapeBeenSelected = false;
+                _canStartCreatingShape = true;
+                return;
+            }
+
             if (_shapeManager.HasShapeBeenDeleted)
             {
                 _shapeManager.HasShapeBeenDeleted = false;
                 _canStartCreatingShape = true;
             }
 
-            //if overall can draw, needs to be added
             if (_canStartCreatingShape)
             {
                 _startingPoint = e.GetCurrentPoint(DrawingCanvas).Position;

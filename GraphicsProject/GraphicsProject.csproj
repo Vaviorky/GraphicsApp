@@ -102,7 +102,6 @@
     <Compile Include="Classes\Shapes\ShapePointer.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />
-    <Compile Include="Extensions\Singleton.cs" />
     <Compile Include="Views\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>

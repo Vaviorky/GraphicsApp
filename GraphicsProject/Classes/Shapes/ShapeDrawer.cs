@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
@@ -40,25 +35,17 @@ namespace GraphicsProject.Classes.Shapes
 
         public static void CreateLine(Line line, Point startingPosition, Point endingPosition)
         {
-            //var width = startingPosition.X > endingPosition.X ? startingPosition.X : endingPosition.X;
-            //var height = startingPosition.Y > endingPosition.Y ? startingPosition.Y : endingPosition.Y;
-
             Canvas.SetLeft(line, 0);
             Canvas.SetTop(line, 0);
+
+            line.Width = 1500;
+            line.Height = 1500;
 
             line.X1 = startingPosition.X;
             line.Y1 = startingPosition.Y;
 
             line.X2 = endingPosition.X;
             line.Y2 = endingPosition.Y;
-
-            line.Width = 1500;
-            line.Height = 1500;
-        }
-
-        private static void AddSpecialPointsToLine(Line line, Point startingPoint, Point endingPoint)
-        {
-
         }
     }
 }

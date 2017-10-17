@@ -15,6 +15,7 @@ namespace GraphicsProject.Classes.Shapes
         public bool HasShapeBeenDeleted { get; set; }
 
         public event Action<Shape> OnShapeParameterChange = delegate { };
+        public event Action<Shape> OnShapeSelection = delegate { };
         public event Action OnShapeModificationComplete = delegate { };
 
         public bool ModifyingShape => _currentShape.IsModyfiying;
@@ -29,9 +30,15 @@ namespace GraphicsProject.Classes.Shapes
             _currentShape = new CurrentShape();
             _shapes = new List<Shape>();
             _currentShape.OnShapeSelect += ResetCanvasIndexOfElements;
+            _currentShape.OnShapeSelect += SelectShape;
             _currentShape.OnDeleteShape += RemoveShapeFromCanvas;
             _currentShape.OnShapeParameterChange += SendChangingParametersInformation;
             _currentShape.OnShapeModificationComplete += ShapeModifitationComplete;
+        }
+
+        private void SelectShape(Shape shape)
+        {
+            OnShapeSelection(shape);
         }
 
         private void SendChangingParametersInformation(Shape shape)
@@ -48,9 +55,9 @@ namespace GraphicsProject.Classes.Shapes
         {
             if (ModifyingShape) return;
 
-            ResetCanvasIndexOfElements();
 
             var shape = GetCurrentShape(shapeType);
+            ResetCanvasIndexOfElements(shape);
             _shapes.Add(shape);
             _currentShape.Create(shape, startingPosition, endingPosition);
 
@@ -74,7 +81,17 @@ namespace GraphicsProject.Classes.Shapes
 
         public void SetCircleRadius(double radius)
         {
+            var size = 2 * radius;
+            var ellipse = _currentShape.SelectedShape as Ellipse;
 
+            ellipse.Width = size;
+            ellipse.Height = size;
+
+            //var xPosition = Canvas.GetLeft(ellipse);
+            //var yPosition = Canvas.GetTop(ellipse);
+
+            //Canvas.SetLeft(ellipse, xPosition - radius);
+            //Canvas.SetTop(ellipse, yPosition - radius);
         }
 
         #endregion
@@ -127,7 +144,7 @@ namespace GraphicsProject.Classes.Shapes
             HasShapeBeenDeleted = true;
         }
 
-        private void ResetCanvasIndexOfElements()
+        private void ResetCanvasIndexOfElements(Shape shape)
         {
             var listCount = _shapes.Count;
             for (int i = 0; i < listCount; i++)

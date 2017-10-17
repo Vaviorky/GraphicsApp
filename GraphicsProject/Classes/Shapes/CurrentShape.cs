@@ -25,7 +25,7 @@ namespace GraphicsProject.Classes.Shapes
 
         private ShapeMouseEventType _mouseType;
 
-        public event Action OnShapeSelect = delegate { };
+        public event Action<Shape> OnShapeSelect = delegate { };
         public event Action OnDeleteShape = delegate { };
         public event Action<Shape> OnShapeParameterChange = delegate { };
         public event Action OnShapeModificationComplete = delegate { };
@@ -81,10 +81,9 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
         {
-            Debug.WriteLine("On mouse down on object");
             IsModyfiying = true;
-            OnShapeSelect();
             SelectedShape = (Shape)sender;
+            OnShapeSelect(SelectedShape);
             OnShapeParameterChange(SelectedShape);
             _startingPoint = e.GetCurrentPoint(SelectedShape).Position;
             _currentCompositeTransform = SelectedShape.RenderTransform as CompositeTransform;
@@ -93,13 +92,11 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnMouseUp(object sender, PointerRoutedEventArgs e)
         {
-            Debug.WriteLine("Object MouseUp");
             IsModyfiying = false;
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            Debug.WriteLine("Shape manipulation started");
             _mouseType = _shapePointer.MouseType;
             this.SelectedShape.Opacity = 0.4;
         }
@@ -137,7 +134,6 @@ namespace GraphicsProject.Classes.Shapes
 
         private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-            Debug.WriteLine("Manipulation of ellipse finished");
             IsModyfiying = false;
             OnShapeModificationComplete();
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
