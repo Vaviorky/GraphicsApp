@@ -12,7 +12,7 @@ namespace GraphicsProject.Classes.Shapes
 {
     internal static class ShapeDrawer
     {
-        public static void InitializeRectangle(Rectangle rectangle, Point startingPosition, Point endingPosition)
+        public static void CreateRectangle(Rectangle rectangle, Point startingPosition, Point endingPosition)
         {
             var x = startingPosition.X < endingPosition.X ? startingPosition.X : endingPosition.X;
             var y = startingPosition.Y < endingPosition.Y ? startingPosition.Y : endingPosition.Y;
@@ -24,7 +24,7 @@ namespace GraphicsProject.Classes.Shapes
             Canvas.SetTop(rectangle, y);
         }
 
-        public static void InitializeCircle(Ellipse ellipse, Point startingPosition, Point endingPosition)
+        public static void CreateCircle(Ellipse ellipse, Point startingPosition, Point endingPosition)
         {
             var radius = Math.Sqrt(Math.Pow(endingPosition.X - startingPosition.X, 2) + 
                 Math.Pow(endingPosition.Y - startingPosition.Y, 2));
@@ -38,7 +38,7 @@ namespace GraphicsProject.Classes.Shapes
             Canvas.SetTop(ellipse, startingPosition.Y - radius);
         }
 
-        public static void InitializeLine(Line line, Point startingPosition, Point endingPosition)
+        public static void CreateLine(Line line, Point startingPosition, Point endingPosition)
         {
             var width = startingPosition.X > endingPosition.X ? startingPosition.X : endingPosition.X;
             var height = startingPosition.Y > endingPosition.Y ? startingPosition.Y : endingPosition.Y;

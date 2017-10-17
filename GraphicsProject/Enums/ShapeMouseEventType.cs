@@ -7,5 +7,7 @@
         SizeUpDown,
         SizeLeftUpRightDown,
         SizeLeftDownRightUp,
+        MouseOnLineX1,
+        MouseOnLineX2,
     }
 }

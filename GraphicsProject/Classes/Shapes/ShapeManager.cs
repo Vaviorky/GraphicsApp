@@ -13,6 +13,15 @@ namespace GraphicsProject.Classes.Shapes
     internal class ShapeManager
     {
         public event Action<Shape> OnShapeParameterChange = delegate { };
+        public event Action<Shape> OnShapeSelect = delegate { };
+
+        public bool ModifyingShape
+        {
+            get
+            {
+                return _currentShape.IsModyfiying;
+            }
+        }
 
         private readonly Canvas _canvas;
         private readonly CurrentShape _currentShape;
@@ -23,7 +32,7 @@ namespace GraphicsProject.Classes.Shapes
             _canvas = canvas;
             _currentShape = new CurrentShape();
             _shapes = new List<Shape>();
-            _currentShape.OnElementStartModifying += ResetCanvasIndexOfElements;
+            _currentShape.OnShapeSelect += ResetCanvasIndexOfElements;
             _currentShape.OnDeleteShape += RemoveShapeFromCanvas;
             _currentShape.OnShapeParameterChange += SendChangingParametersInformation;
         }
@@ -33,14 +42,14 @@ namespace GraphicsProject.Classes.Shapes
             OnShapeParameterChange(shape);
         }
 
-        public bool CanModifyShape()
+        private void ShapeSelection(Shape shape)
         {
-            return !_currentShape.IsDragging;
+            OnShapeSelect(shape);
         }
 
         public void CreateNewShape(ShapeType shapeType, Point startingPosition, Point endingPosition)
         {
-            if (!CanModifyShape()) return;
+            if (ModifyingShape) return;
 
             ResetCanvasIndexOfElements();
 
@@ -53,9 +62,42 @@ namespace GraphicsProject.Classes.Shapes
             _canvas.Children.Add(shape);
         }
 
+        #region Modifying Shapes
+
+
+        #endregion
+
         public void ModifyCreatedShape(Point newPosition)
         {
             _currentShape.Resize(newPosition);
+        }
+
+        public void SetWidthAndHeight(double width, double height)
+        {
+            _currentShape.SelectedShape.Width = width;
+            _currentShape.SelectedShape.Height = height;
+        }
+
+        public void SetPosition(double x, double y)
+        {
+            Canvas.SetLeft(_currentShape.SelectedShape, x);
+            Canvas.SetTop(_currentShape.SelectedShape, y);
+        }
+
+        public void SetCircleRadius(double radius)
+        {
+
+        }
+
+        public void SetLineParameters(double x1, double y1, double x2, double y2)
+        {
+            if (_currentShape.SelectedShape is Line line)
+            {
+                line.X1 = x1;
+                line.Y1 = y1;
+                line.X2 = x2;
+                line.Y2 = y2;
+            }
         }
 
         private Shape GetCurrentShape(ShapeType shapeType)
@@ -102,5 +144,6 @@ namespace GraphicsProject.Classes.Shapes
                 Canvas.SetZIndex(_shapes[i], 0);
             }
         }
+
     }
 }
