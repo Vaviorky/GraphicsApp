@@ -12,6 +12,7 @@ SentryPortable/Sentry.UWP.Tests/RavenConfig.cs
 *.suo
 *.user
 *.sln.docstates
+*.ide
 
 # Build results
 
