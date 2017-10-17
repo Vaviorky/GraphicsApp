@@ -15,7 +15,6 @@ namespace GraphicsProject.Classes.Shapes
     class CurrentShape
     {
         public bool IsModyfiying { get; private set; }
-
         public Shape SelectedShape { get; private set; }
 
         private CompositeTransform _currentCompositeTransform;
@@ -29,7 +28,7 @@ namespace GraphicsProject.Classes.Shapes
         public event Action OnShapeSelect = delegate { };
         public event Action OnDeleteShape = delegate { };
         public event Action<Shape> OnShapeParameterChange = delegate { };
-        public event Action<Shape> OnShapeModificationComplete = delegate { };
+        public event Action OnShapeModificationComplete = delegate { };
 
         public void Create(Shape shape, Point startingPosition, Point endingPosition)
         {
@@ -50,20 +49,6 @@ namespace GraphicsProject.Classes.Shapes
             }
 
             _startingPoint = startingPosition;
-        }
-
-        public void Resize(Point newPosition)
-        {
-            if (SelectedShape is Line line)
-            {
-                line.X2 = newPosition.X;
-                line.Y2 = newPosition.Y;
-            }
-            else
-            {
-                _shapeResizer.ResizeOnStart(SelectedShape, _startingPoint, newPosition);
-                OnShapeParameterChange(SelectedShape);
-            }
         }
 
         private void OnMouseOn(object sender, PointerRoutedEventArgs e)
@@ -154,7 +139,7 @@ namespace GraphicsProject.Classes.Shapes
         {
             Debug.WriteLine("Manipulation of ellipse finished");
             IsModyfiying = false;
-            OnShapeModificationComplete(SelectedShape);
+            OnShapeModificationComplete();
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             this.SelectedShape.Opacity = 1;
         }

@@ -38,10 +38,7 @@
                     </Grid.ColumnDefinitions>
                     <Canvas Grid.Column="0" Name="DrawingCanvas" Background="White" 
                             PointerPressed="Canvas_OnPointerPressed" 
-                            PointerReleased="Canvas_PointerReleased"
-                            PointerMoved="DrawingCanvas_PointerMoved"
-                            
-                            />
+                            PointerReleased="Canvas_PointerReleased" />
                     <Grid Grid.Column="1" Background="DimGray">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>

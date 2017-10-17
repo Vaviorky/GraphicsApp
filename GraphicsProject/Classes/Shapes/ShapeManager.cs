@@ -12,16 +12,12 @@ namespace GraphicsProject.Classes.Shapes
 {
     internal class ShapeManager
     {
-        public event Action<Shape> OnShapeParameterChange = delegate { };
-        public event Action<Shape> OnShapeSelect = delegate { };
+        public bool HasShapeBeenDeleted { get; set; }
 
-        public bool ModifyingShape
-        {
-            get
-            {
-                return _currentShape.IsModyfiying;
-            }
-        }
+        public event Action<Shape> OnShapeParameterChange = delegate { };
+        public event Action OnShapeModificationComplete = delegate { };
+
+        public bool ModifyingShape => _currentShape.IsModyfiying;
 
         private readonly Canvas _canvas;
         private readonly CurrentShape _currentShape;
@@ -35,6 +31,7 @@ namespace GraphicsProject.Classes.Shapes
             _currentShape.OnShapeSelect += ResetCanvasIndexOfElements;
             _currentShape.OnDeleteShape += RemoveShapeFromCanvas;
             _currentShape.OnShapeParameterChange += SendChangingParametersInformation;
+            _currentShape.OnShapeModificationComplete += ShapeModifitationComplete;
         }
 
         private void SendChangingParametersInformation(Shape shape)
@@ -42,9 +39,9 @@ namespace GraphicsProject.Classes.Shapes
             OnShapeParameterChange(shape);
         }
 
-        private void ShapeSelection(Shape shape)
+        private void ShapeModifitationComplete()
         {
-            OnShapeSelect(shape);
+            OnShapeModificationComplete();
         }
 
         public void CreateNewShape(ShapeType shapeType, Point startingPosition, Point endingPosition)
@@ -63,15 +60,6 @@ namespace GraphicsProject.Classes.Shapes
         }
 
         #region Modifying Shapes
-
-
-        #endregion
-
-        public void ModifyCreatedShape(Point newPosition)
-        {
-            _currentShape.Resize(newPosition);
-        }
-
         public void SetWidthAndHeight(double width, double height)
         {
             _currentShape.SelectedShape.Width = width;
@@ -88,6 +76,8 @@ namespace GraphicsProject.Classes.Shapes
         {
 
         }
+
+        #endregion
 
         public void SetLineParameters(double x1, double y1, double x2, double y2)
         {
@@ -134,6 +124,7 @@ namespace GraphicsProject.Classes.Shapes
         {
             _shapes.Remove(_currentShape.SelectedShape);
             _canvas.Children.Remove(_currentShape.SelectedShape);
+            HasShapeBeenDeleted = true;
         }
 
         private void ResetCanvasIndexOfElements()
@@ -144,6 +135,5 @@ namespace GraphicsProject.Classes.Shapes
                 Canvas.SetZIndex(_shapes[i], 0);
             }
         }
-
     }
 }

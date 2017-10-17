@@ -22,7 +22,7 @@ namespace GraphicsProject.Views
         private Point _endingPoint;
 
         private bool _canStartCreatingShape = true;
-        private bool _mouseDownOnCanvas = false;
+        private bool _mouseDownOnCanvas;
 
         public Main()
         {
@@ -30,6 +30,13 @@ namespace GraphicsProject.Views
             this._shapeType = ShapeType.Line;
             this._shapeManager = new ShapeManager(DrawingCanvas);
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
+            _shapeManager.OnShapeModificationComplete += ResetDrawing;
+        }
+
+        private void ResetDrawing()
+        {
+            Debug.WriteLine("Reset drawing");
+            _canStartCreatingShape = true;
         }
 
         private void UpdateTextFields(Shape shape)
@@ -40,7 +47,7 @@ namespace GraphicsProject.Views
 
             if (shape is Line line)
             {
-                point = cs.TransformPoint(new Point((line.X1 + line.X2)  / 2, (line.Y1 + line.Y2) / 2));
+                point = cs.TransformPoint(new Point((line.X1 + line.X2) / 2, (line.Y1 + line.Y2) / 2));
             }
             else
             {
@@ -80,12 +87,17 @@ namespace GraphicsProject.Views
 
         #region CanvasEvents
 
-
-
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             Debug.WriteLine("Canvas on pointer pressed");
             _mouseDownOnCanvas = true;
+
+            if (_shapeManager.HasShapeBeenDeleted)
+            {
+                _shapeManager.HasShapeBeenDeleted = false;
+                _canStartCreatingShape = true;
+            }
+
             //if overall can draw, needs to be added
             if (_canStartCreatingShape)
             {
@@ -103,11 +115,6 @@ namespace GraphicsProject.Views
         private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _mouseDownOnCanvas = false;
-        }
-
-        private void DrawingCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-
         }
 
         #endregion
@@ -134,6 +141,7 @@ namespace GraphicsProject.Views
 
         private void SelectButton(ShapeType type)
         {
+            _canStartCreatingShape = true;
             ButtonLineSelect.Background = new SolidColorBrush(Colors.ForestGreen);
             ButtonEllipseSelect.Background = new SolidColorBrush(Colors.ForestGreen);
             ButtonRectangleSelect.Background = new SolidColorBrush(Colors.ForestGreen);
@@ -219,8 +227,6 @@ namespace GraphicsProject.Views
             }
         }
 
-        #endregion
-
         private void Shape_SetPosition()
         {
             if (_mouseDownOnCanvas || _shapeManager.ModifyingShape)
@@ -272,5 +278,8 @@ namespace GraphicsProject.Views
                 Debug.WriteLine(ex.StackTrace);
             }
         }
+
+        #endregion
+
     }
 }
