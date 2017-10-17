@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Windows.Foundation;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,7 +14,7 @@ namespace GraphicsProject.Classes.Shapes
 {
     class CurrentShape
     {
-        public bool IsDragging { get; private set; }
+        public bool IsModyfiying { get; private set; }
 
         public Shape SelectedShape { get; private set; }
 
@@ -27,9 +26,10 @@ namespace GraphicsProject.Classes.Shapes
 
         private ShapeMouseEventType _mouseType;
 
-        public event Action OnElementStartModifying = delegate { };
+        public event Action OnShapeSelect = delegate { };
         public event Action OnDeleteShape = delegate { };
         public event Action<Shape> OnShapeParameterChange = delegate { };
+        public event Action<Shape> OnShapeModificationComplete = delegate { };
 
         public void Create(Shape shape, Point startingPosition, Point endingPosition)
         {
@@ -39,13 +39,13 @@ namespace GraphicsProject.Classes.Shapes
             switch (shape)
             {
                 case Line line:
-                    ShapeDrawer.InitializeLine(line, startingPosition, endingPosition);
+                    ShapeDrawer.CreateLine(line, startingPosition, endingPosition);
                     break;
                 case Rectangle rectangle:
-                    ShapeDrawer.InitializeRectangle(rectangle, startingPosition, endingPosition);
+                    ShapeDrawer.CreateRectangle(rectangle, startingPosition, endingPosition);
                     break;
                 case Ellipse ellipse:
-                    ShapeDrawer.InitializeCircle(ellipse, startingPosition, endingPosition);
+                    ShapeDrawer.CreateCircle(ellipse, startingPosition, endingPosition);
                     break;
             }
 
@@ -68,20 +68,43 @@ namespace GraphicsProject.Classes.Shapes
 
         private void SetPositionAndSizeOfRectangle(Point startingPosition, Point endingPosition)
         {
-            
+
+        }
+
+        private void OnMouseOn(object sender, PointerRoutedEventArgs e)
+        {
+            var shiftIsPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift)
+                .HasFlag(CoreVirtualKeyStates.Down);
+
+            if (!shiftIsPressed)
+            {
+                _shapePointer.ResetPointer();
+                return;
+            }
+
+            var shape = (Shape)sender;
+            var mousePos = e.GetCurrentPoint(shape).Position;
+
+            _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
         }
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
         {
             Debug.WriteLine("On mouse down on object");
-            IsDragging = true;
-            OnElementStartModifying();
+            IsModyfiying = true;
+            OnShapeSelect();
             SelectedShape = (Shape)sender;
             OnShapeParameterChange(SelectedShape);
             _startingPoint = e.GetCurrentPoint(SelectedShape).Position;
             Debug.WriteLine(_startingPoint);
             _currentCompositeTransform = SelectedShape.RenderTransform as CompositeTransform;
             Canvas.SetZIndex(SelectedShape, 2);
+        }
+
+        private void OnMouseUp(object sender, PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("Object MouseUp");
+            IsModyfiying = false;
         }
 
         private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
@@ -121,31 +144,10 @@ namespace GraphicsProject.Classes.Shapes
         private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             Debug.WriteLine("Manipulation of ellipse finished");
+            IsModyfiying = false;
+            OnShapeModificationComplete(SelectedShape);
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             this.SelectedShape.Opacity = 1;
-        }
-
-        private void OnMouseUp(object sender, PointerRoutedEventArgs e)
-        {
-            Debug.WriteLine("Object MouseUp");
-            IsDragging = false;
-        }
-
-        private void OnMouseOn(object sender, PointerRoutedEventArgs e)
-        {
-            var shiftIsPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift)
-                .HasFlag(CoreVirtualKeyStates.Down);
-
-            if (!shiftIsPressed)
-            {
-                _shapePointer.ResetPointer();
-                return;
-            }
-
-            var shape = (Shape)sender;
-            var mousePos = e.GetCurrentPoint(shape).Position;
-
-            _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
         }
 
         private void PrepareShape(Shape shape)
