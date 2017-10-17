@@ -12,7 +12,7 @@ SentryPortable/Sentry.UWP.Tests/RavenConfig.cs
 *.suo
 *.user
 *.sln.docstates
-*.ide
+.vs\GraphicsProject\v15\sqlite3\storage.ide
 
 # Build results
 
