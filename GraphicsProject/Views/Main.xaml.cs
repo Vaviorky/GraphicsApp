@@ -35,7 +35,17 @@ namespace GraphicsProject.Views
         private void UpdateTextFields(Shape shape)
         {
             var cs = shape.TransformToVisual(DrawingCanvas);
-            var point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
+
+            Point point;
+
+            if (shape is Line line)
+            {
+                point = cs.TransformPoint(new Point((line.X1 + line.X2)  / 2, (line.Y1 + line.Y2) / 2));
+            }
+            else
+            {
+                point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
+            }
 
             XPosition.Text = Math.Round(point.X, 2).ToString();
             YPosition.Text = Math.Round(point.Y, 2).ToString();
@@ -97,7 +107,7 @@ namespace GraphicsProject.Views
 
         private void DrawingCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            
+
         }
 
         #endregion
@@ -262,7 +272,5 @@ namespace GraphicsProject.Views
                 Debug.WriteLine(ex.StackTrace);
             }
         }
-
-
     }
 }

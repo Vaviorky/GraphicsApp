@@ -64,7 +64,6 @@ namespace GraphicsProject.Classes.Shapes
 
         public void ResizeY(Shape shape, double startY, double newY)
         {
-
             if (newY >= 0)
             {
                 shape.Height = newY;
@@ -75,6 +74,18 @@ namespace GraphicsProject.Classes.Shapes
                 Canvas.SetTop(shape, startY + newY);
                 shape.Height = -newY;
             }
+        }
+
+        public void ResizeLineX1(Line line, Point newStartPoint)
+        {
+            line.X1 = newStartPoint.X;
+            line.Y1 = newStartPoint.Y;
+        }
+
+        public void ResizeLineX2(Line line, Point newEndingPoint)
+        {
+            line.X2= newEndingPoint.X;
+            line.Y2 = newEndingPoint.Y;
         }
     }
 }

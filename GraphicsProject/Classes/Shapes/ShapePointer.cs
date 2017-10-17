@@ -41,11 +41,14 @@ namespace GraphicsProject.Classes.Shapes
         {
             if (Math.Abs(mousePos.X - line.X1) < 10 || Math.Abs(mousePos.Y - line.Y1) < 10)
             {
-                Debug.WriteLine("Start Point");
-            } 
-            if(Math.Abs(mousePos.X - line.X2) < 10 || Math.Abs(mousePos.Y - line.Y2) < 10)
+                MouseType = ShapeMouseEventType.MouseOnLineX1;
+                Window.Current.CoreWindow.PointerCursor = _sizeWestEastCursor;
+            }
+
+            if (Math.Abs(mousePos.X - line.X2) < 10 || Math.Abs(mousePos.Y - line.Y2) < 10)
             {
-                Debug.WriteLine("End Point");
+                MouseType = ShapeMouseEventType.MouseOnLineX2;
+                Window.Current.CoreWindow.PointerCursor = _sizeWestEastCursor;
             }
         }
 

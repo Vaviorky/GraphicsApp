@@ -40,8 +40,8 @@ namespace GraphicsProject.Classes.Shapes
 
         public static void CreateLine(Line line, Point startingPosition, Point endingPosition)
         {
-            var width = startingPosition.X > endingPosition.X ? startingPosition.X : endingPosition.X;
-            var height = startingPosition.Y > endingPosition.Y ? startingPosition.Y : endingPosition.Y;
+            //var width = startingPosition.X > endingPosition.X ? startingPosition.X : endingPosition.X;
+            //var height = startingPosition.Y > endingPosition.Y ? startingPosition.Y : endingPosition.Y;
 
             Canvas.SetLeft(line, 0);
             Canvas.SetTop(line, 0);
@@ -52,8 +52,8 @@ namespace GraphicsProject.Classes.Shapes
             line.X2 = endingPosition.X;
             line.Y2 = endingPosition.Y;
 
-            line.Width = width;
-            line.Height = height;
+            line.Width = 1500;
+            line.Height = 1500;
         }
 
         private static void AddSpecialPointsToLine(Line line, Point startingPoint, Point endingPoint)

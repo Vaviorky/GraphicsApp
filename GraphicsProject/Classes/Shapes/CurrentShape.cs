@@ -139,6 +139,12 @@ namespace GraphicsProject.Classes.Shapes
                     break;
                 case ShapeMouseEventType.SizeLeftDownRightUp:
                     break;
+                case ShapeMouseEventType.MouseOnLineX1:
+                    _shapeResizer.ResizeLineX1(SelectedShape as Line, e.Position);
+                    break;
+                case ShapeMouseEventType.MouseOnLineX2:
+                    _shapeResizer.ResizeLineX2(SelectedShape as Line, e.Position);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
