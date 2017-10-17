@@ -71,9 +71,10 @@ namespace GraphicsProject.Classes.Shapes
                     _shapePointer.CheckMousePositionForLine(line, mousePos);
                     break;
                 case Rectangle rectangle:
-                    _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
+                    _shapePointer.CheckMousePositionForRectangle(rectangle.Width, rectangle.Height, mousePos);
                     break;
                 case Ellipse ellipse:
+                    _shapePointer.CheckMousePositionForCircle(ellipse.Width, ellipse.Height, mousePos);
                     break;
 
             }
@@ -126,6 +127,12 @@ namespace GraphicsProject.Classes.Shapes
                     break;
                 case ShapeMouseEventType.MouseOnLineX2:
                     _shapeResizer.ResizeLineX2(SelectedShape as Line, e.Position);
+                    break;
+                case ShapeMouseEventType.MouseOnCircleX:
+                    _shapeResizer.ResizeEllipseX(SelectedShape, _startingPoint.X, e.Position.X);
+                    break;
+                case ShapeMouseEventType.MouseOnCircleY:
+                    _shapeResizer.ResizeEllipseY(SelectedShape, _startingPoint.Y, e.Position.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

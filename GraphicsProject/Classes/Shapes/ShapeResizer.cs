@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -8,57 +9,16 @@ namespace GraphicsProject.Classes.Shapes
 {
     class ShapeResizer
     {
-        public void ResizeOnStart(Shape shape, Point startingPoint, Point newPoint)
-        {
-            var width = newPoint.X - startingPoint.X;
-            var height = newPoint.Y - startingPoint.Y;
-
-            if (width >= 0)
-            {
-                shape.Width = width;
-            }
-
-            if (height >= 0)
-            {
-                shape.Height = height;
-            }
-
-            if (width < 0)
-            {
-                Canvas.SetLeft(shape, newPoint.X);
-                shape.Width = startingPoint.X - newPoint.X;
-            }
-
-            if (height < 0)
-            {
-                Canvas.SetTop(shape, newPoint.Y);
-                shape.Height = startingPoint.Y - newPoint.Y;
-            }
-        }
-
         public void ResizeX(Shape shape, double startX, double newX)
         {
-            if (startX > shape.Width / 2)
+            if (newX >= 0)
             {
-                if (newX >= 0)
-                {
-                    shape.Width = newX;
-                }
-                else
-                {
-                    var transform = shape.RenderTransform as CompositeTransform;
-
-                    transform.TranslateX += newX;
-
-                    //shape.Width = -newX;
-                    //Canvas.SetLeft(shape, startX + newX);
-                    //Debug.WriteLine("StartX + newX: " + (startX + newX));
-                    Debug.WriteLine("Width " + -newX);
-                }
+                shape.Width = newX;
             }
             else
             {
-                
+                Canvas.SetLeft(shape, newX);
+                shape.Width = Math.Abs(startX - newX);
             }
         }
 
@@ -70,7 +30,6 @@ namespace GraphicsProject.Classes.Shapes
             }
             else
             {
-                Debug.WriteLine("StartY: " + startY + " newY:" + newY);
                 Canvas.SetTop(shape, startY + newY);
                 shape.Height = -newY;
             }
@@ -84,8 +43,36 @@ namespace GraphicsProject.Classes.Shapes
 
         public void ResizeLineX2(Line line, Point newEndingPoint)
         {
-            line.X2= newEndingPoint.X;
+            line.X2 = newEndingPoint.X;
             line.Y2 = newEndingPoint.Y;
+        }
+
+        public void ResizeEllipseX(Shape shape, double startingX, double actualX)
+        {
+            var diffX = startingX - actualX;
+
+            try
+            {
+                shape.Width = startingX - diffX;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        public void ResizeEllipseY(Shape shape, double startingY, double actualY)
+        {
+            var diffY = startingY - actualY;
+
+            try
+            {
+                shape.Width = startingY - diffY;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

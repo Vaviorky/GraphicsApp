@@ -9,5 +9,7 @@
         SizeLeftDownRightUp,
         MouseOnLineX1,
         MouseOnLineX2,
+        MouseOnCircleX,
+        MouseOnCircleY,
     }
 }

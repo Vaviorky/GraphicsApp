@@ -52,8 +52,6 @@ namespace GraphicsProject.Views
             SelectButton(_shapeType);
             UpdateTextFields(shape);
 
-            Debug.WriteLine("Shape selection");
-
             _hasShapeBeenSelected = true;
         }
 
@@ -98,7 +96,7 @@ namespace GraphicsProject.Views
                     Rectangle_Height.Text = Math.Round(rectangle.Height, 2).ToString();
                     break;
                 case Ellipse circle:
-                    Circle_Radius.Text = Math.Round(circle.Height, 2).ToString();
+                    Circle_Radius.Text = Math.Round(circle.Width / 2, 2).ToString();
                     break;
             }
         }
@@ -117,7 +115,6 @@ namespace GraphicsProject.Views
 
             if (_hasShapeBeenSelected)
             {
-                Debug.WriteLine("Shape has been selected");
                 _hasShapeBeenSelected = false;
                 _canStartCreatingShape = true;
                 return;
@@ -243,7 +240,7 @@ namespace GraphicsProject.Views
             Rectangle_SetWidthAndHeight();
         }
 
-        private void Circle_RadiusChanged(object sender, KeyRoutedEventArgs e)
+        private void Circle_Radius_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -311,5 +308,6 @@ namespace GraphicsProject.Views
 
         #endregion
 
+        
     }
 }

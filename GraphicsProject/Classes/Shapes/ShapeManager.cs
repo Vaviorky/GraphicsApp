@@ -67,6 +67,7 @@ namespace GraphicsProject.Classes.Shapes
         }
 
         #region Modifying Shapes
+
         public void SetWidthAndHeight(double width, double height)
         {
             _currentShape.SelectedShape.Width = width;
@@ -75,23 +76,33 @@ namespace GraphicsProject.Classes.Shapes
 
         public void SetPosition(double x, double y)
         {
-            Canvas.SetLeft(_currentShape.SelectedShape, x);
-            Canvas.SetTop(_currentShape.SelectedShape, y);
+            Canvas.SetLeft(_currentShape.SelectedShape, x - _currentShape.SelectedShape.ActualWidth / 2);
+            Canvas.SetTop(_currentShape.SelectedShape, y - _currentShape.SelectedShape.ActualHeight / 2);
         }
 
         public void SetCircleRadius(double radius)
         {
             var size = 2 * radius;
-            var ellipse = _currentShape.SelectedShape as Ellipse;
+            var previusRadius = _currentShape.SelectedShape.Width / 2;
 
-            ellipse.Width = size;
-            ellipse.Height = size;
+            _currentShape.SelectedShape.Width = size;
+            _currentShape.SelectedShape.Height = size;
 
-            //var xPosition = Canvas.GetLeft(ellipse);
-            //var yPosition = Canvas.GetTop(ellipse);
+            var xPosition = Canvas.GetLeft(_currentShape.SelectedShape);
+            var yPosition = Canvas.GetTop(_currentShape.SelectedShape);
 
-            //Canvas.SetLeft(ellipse, xPosition - radius);
-            //Canvas.SetTop(ellipse, yPosition - radius);
+            var diff = Math.Abs(radius - previusRadius);
+
+            if (radius > previusRadius)
+            {
+                Canvas.SetLeft(_currentShape.SelectedShape, xPosition - diff);
+                Canvas.SetTop(_currentShape.SelectedShape, yPosition - diff);
+            }
+            else
+            {
+                Canvas.SetLeft(_currentShape.SelectedShape, xPosition + diff);
+                Canvas.SetTop(_currentShape.SelectedShape, yPosition + diff);
+            }
         }
 
         #endregion
