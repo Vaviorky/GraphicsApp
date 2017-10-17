@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Classes.Shapes;
+using Windows.UI.Core;
 
 namespace GraphicsProject.Views
 {
@@ -92,6 +93,11 @@ namespace GraphicsProject.Views
         private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _mouseDownOnCanvas = false;
+        }
+
+        private void DrawingCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            
         }
 
         #endregion
@@ -256,5 +262,7 @@ namespace GraphicsProject.Views
                 Debug.WriteLine(ex.StackTrace);
             }
         }
+
+
     }
 }

@@ -66,11 +66,6 @@ namespace GraphicsProject.Classes.Shapes
             }
         }
 
-        private void SetPositionAndSizeOfRectangle(Point startingPosition, Point endingPosition)
-        {
-
-        }
-
         private void OnMouseOn(object sender, PointerRoutedEventArgs e)
         {
             var shiftIsPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift)
@@ -85,7 +80,18 @@ namespace GraphicsProject.Classes.Shapes
             var shape = (Shape)sender;
             var mousePos = e.GetCurrentPoint(shape).Position;
 
-            _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
+            switch (shape)
+            {
+                case Line line:
+                    _shapePointer.CheckMousePositionForLine(line, mousePos);
+                    break;
+                case Rectangle rectangle:
+                    _shapePointer.CheckMousePosition(shape.Width, shape.Height, mousePos);
+                    break;
+                case Ellipse ellipse:
+                    break;
+
+            }
         }
 
         private void OnMouseDown(object sender, PointerRoutedEventArgs e)
@@ -96,7 +102,6 @@ namespace GraphicsProject.Classes.Shapes
             SelectedShape = (Shape)sender;
             OnShapeParameterChange(SelectedShape);
             _startingPoint = e.GetCurrentPoint(SelectedShape).Position;
-            Debug.WriteLine(_startingPoint);
             _currentCompositeTransform = SelectedShape.RenderTransform as CompositeTransform;
             Canvas.SetZIndex(SelectedShape, 2);
         }
@@ -111,8 +116,6 @@ namespace GraphicsProject.Classes.Shapes
         {
             Debug.WriteLine("Shape manipulation started");
             _mouseType = _shapePointer.MouseType;
-
-            Debug.WriteLine("Mouse type: " + _shapePointer.MouseType);
             this.SelectedShape.Opacity = 0.4;
         }
 
@@ -157,6 +160,7 @@ namespace GraphicsProject.Classes.Shapes
             shape.PointerPressed += OnMouseDown;
             shape.PointerReleased += OnMouseUp;
             shape.PointerMoved += OnMouseOn;
+            shape.PointerExited += (sender, args) => Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
 
             shape.ManipulationMode =
                 ManipulationModes.TranslateX | ManipulationModes.TranslateY;

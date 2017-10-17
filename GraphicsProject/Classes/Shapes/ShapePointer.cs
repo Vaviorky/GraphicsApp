@@ -6,6 +6,7 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using GraphicsProject.Enums;
+using Windows.UI.Xaml.Shapes;
 
 namespace GraphicsProject.Classes.Shapes
 {
@@ -32,6 +33,19 @@ namespace GraphicsProject.Classes.Shapes
             else
             {
                 ResetPointer();
+            }
+        }
+
+
+        public void CheckMousePositionForLine(Line line, Point mousePos)
+        {
+            if (Math.Abs(mousePos.X - line.X1) < 10 || Math.Abs(mousePos.Y - line.Y1) < 10)
+            {
+                Debug.WriteLine("Start Point");
+            } 
+            if(Math.Abs(mousePos.X - line.X2) < 10 || Math.Abs(mousePos.Y - line.Y2) < 10)
+            {
+                Debug.WriteLine("End Point");
             }
         }
 

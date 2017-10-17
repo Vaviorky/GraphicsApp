@@ -39,6 +39,7 @@
                     <Canvas Grid.Column="0" Name="DrawingCanvas" Background="White" 
                             PointerPressed="Canvas_OnPointerPressed" 
                             PointerReleased="Canvas_PointerReleased"
+                            PointerMoved="DrawingCanvas_PointerMoved"
                             
                             />
                     <Grid Grid.Column="1" Background="DimGray">
