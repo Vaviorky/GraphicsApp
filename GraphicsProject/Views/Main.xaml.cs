@@ -1,7 +1,6 @@
 ﻿using System;
 using GraphicsProject.Enums;
 using System.Diagnostics;
-using System.Globalization;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -16,7 +15,7 @@ namespace GraphicsProject.Views
     public sealed partial class Main : Page
     {
         private ShapeType _shapeType;
-        private readonly ShapeManager _shapeManager;
+        private ShapeManager _shapeManager;
         private Point _startingPoint;
         private Point _endingPoint;
 
@@ -27,12 +26,35 @@ namespace GraphicsProject.Views
         public Main()
         {
             this.InitializeComponent();
-            this._shapeType = ShapeType.Line;
-            this._shapeManager = new ShapeManager(DrawingCanvas);
-            _shapeManager.OnShapeSelection += OnShapeSelection;
-            _shapeManager.OnShapeParameterChange += UpdateTextFields;
-            _shapeManager.OnShapeModificationComplete += ResetDrawing;
+            InitializeShapeManager();
+        }
 
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+        }
+
+        #region Shapes
+
+        private void UpdateTextFields(Shape shape)
+        {
+            var cs = shape.TransformToVisual(DrawingCanvas);
+
+            Point point;
+
+            if (shape is Line line)
+            {
+                point = cs.TransformPoint(new Point((line.X1 + line.X2) / 2, (line.Y1 + line.Y2) / 2));
+            }
+            else
+            {
+                point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
+            }
+
+            XPosition.Text = Math.Round(point.X, 2).ToString();
+            YPosition.Text = Math.Round(point.Y, 2).ToString();
+
+            UpdateShapeSpecialInformation(shape);
         }
 
         private void OnShapeSelection(Shape shape)
@@ -60,53 +82,16 @@ namespace GraphicsProject.Views
             _canStartCreatingShape = true;
         }
 
-        private void UpdateTextFields(Shape shape)
-        {
-            var cs = shape.TransformToVisual(DrawingCanvas);
-
-            Point point;
-
-            if (shape is Line line)
-            {
-                point = cs.TransformPoint(new Point((line.X1 + line.X2) / 2, (line.Y1 + line.Y2) / 2));
-            }
-            else
-            {
-                point = cs.TransformPoint(new Point(shape.Width / 2, shape.Height / 2));
-            }
-
-            XPosition.Text = Math.Round(point.X, 2).ToString();
-            YPosition.Text = Math.Round(point.Y, 2).ToString();
-
-            UpdateShapeSpecialInformation(shape);
-        }
-
-        private void UpdateShapeSpecialInformation(Shape shape)
-        {
-            switch (shape)
-            {
-                case Line line:
-                    Line_X1.Text = Math.Round(line.X1, 2).ToString();
-                    Line_Y1.Text = Math.Round(line.Y1, 2).ToString();
-                    Line_X2.Text = Math.Round(line.X2, 2).ToString();
-                    Line_Y2.Text = Math.Round(line.Y2, 2).ToString();
-                    break;
-                case Rectangle rectangle:
-                    Rectangle_Width.Text = Math.Round(rectangle.Width, 2).ToString();
-                    Rectangle_Height.Text = Math.Round(rectangle.Height, 2).ToString();
-                    break;
-                case Ellipse circle:
-                    Circle_Radius.Text = Math.Round(circle.Width / 2, 2).ToString();
-                    break;
-            }
-        }
-
-        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
-        {
-            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
-        }
-
         #region CanvasEvents
+
+        private void InitializeShapeManager()
+        {
+            this._shapeManager = new ShapeManager(DrawingCanvas);
+            _shapeManager.OnShapeSelection += OnShapeSelection;
+            _shapeManager.OnShapeParameterChange += UpdateTextFields;
+            _shapeManager.OnShapeModificationComplete += ResetDrawing;
+            this._shapeType = ShapeType.Line;
+        }
 
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -306,8 +291,34 @@ namespace GraphicsProject.Views
             }
         }
 
+        private void UpdateShapeSpecialInformation(Shape shape)
+        {
+            switch (shape)
+            {
+                case Line line:
+                    Line_X1.Text = Math.Round(line.X1, 2).ToString();
+                    Line_Y1.Text = Math.Round(line.Y1, 2).ToString();
+                    Line_X2.Text = Math.Round(line.X2, 2).ToString();
+                    Line_Y2.Text = Math.Round(line.Y2, 2).ToString();
+                    break;
+                case Rectangle rectangle:
+                    Rectangle_Width.Text = Math.Round(rectangle.Width, 2).ToString();
+                    Rectangle_Height.Text = Math.Round(rectangle.Height, 2).ToString();
+                    break;
+                case Ellipse circle:
+                    Circle_Radius.Text = Math.Round(circle.Width / 2, 2).ToString();
+                    break;
+            }
+        }
+
+        #endregion
         #endregion
 
+        #region FileManagement 
+
         
+
+        #endregion
+
     }
 }
