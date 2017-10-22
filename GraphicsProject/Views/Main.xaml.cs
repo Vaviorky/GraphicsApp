@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Shapes;
 
 namespace GraphicsProject.Views
@@ -16,9 +17,11 @@ namespace GraphicsProject.Views
     {
         private ShapeType _shapeType;
         private ShapeManager _shapeManager;
+
+        private ImageManager _imageManager;
+
         private Point _startingPoint;
         private Point _endingPoint;
-
         private bool _canStartCreatingShape = true;
         private bool _hasShapeBeenSelected = false;
         private bool _mouseDownOnCanvas;
@@ -26,6 +29,7 @@ namespace GraphicsProject.Views
         public Main()
         {
             this.InitializeComponent();
+            _imageManager = new ImageManager(DrawingCanvas);
             InitializeShapeManager();
         }
 
@@ -229,7 +233,7 @@ namespace GraphicsProject.Views
         {
             try
             {
-                double radius = double.Parse(Circle_Radius.Text);
+                double radius = double.Parse(CircleRadius.Text);
                 _shapeManager.SetCircleRadius(radius);
             }
             catch (Exception ex)
@@ -263,10 +267,10 @@ namespace GraphicsProject.Views
         {
             try
             {
-                double x1 = double.Parse(Line_X1.Text);
-                double y1 = double.Parse(Line_Y1.Text);
-                double x2 = double.Parse(Line_X2.Text);
-                double y2 = double.Parse(Line_Y2.Text);
+                double x1 = double.Parse(LineX1.Text);
+                double y1 = double.Parse(LineY1.Text);
+                double x2 = double.Parse(LineX2.Text);
+                double y2 = double.Parse(LineY2.Text);
                 _shapeManager.SetLineParameters(x1, y1, x2, y2);
             }
             catch (Exception ex)
@@ -280,8 +284,8 @@ namespace GraphicsProject.Views
         {
             try
             {
-                double width = double.Parse(Rectangle_Width.Text);
-                double height = double.Parse(Rectangle_Height.Text);
+                double width = double.Parse(RectangleWidth.Text);
+                double height = double.Parse(RectangleHeight.Text);
                 _shapeManager.SetWidthAndHeight(width, height);
             }
             catch (Exception ex)
@@ -296,17 +300,17 @@ namespace GraphicsProject.Views
             switch (shape)
             {
                 case Line line:
-                    Line_X1.Text = Math.Round(line.X1, 2).ToString();
-                    Line_Y1.Text = Math.Round(line.Y1, 2).ToString();
-                    Line_X2.Text = Math.Round(line.X2, 2).ToString();
-                    Line_Y2.Text = Math.Round(line.Y2, 2).ToString();
+                    LineX1.Text = Math.Round(line.X1, 2).ToString();
+                    LineY1.Text = Math.Round(line.Y1, 2).ToString();
+                    LineX2.Text = Math.Round(line.X2, 2).ToString();
+                    LineY2.Text = Math.Round(line.Y2, 2).ToString();
                     break;
                 case Rectangle rectangle:
-                    Rectangle_Width.Text = Math.Round(rectangle.Width, 2).ToString();
-                    Rectangle_Height.Text = Math.Round(rectangle.Height, 2).ToString();
+                    RectangleWidth.Text = Math.Round(rectangle.Width, 2).ToString();
+                    RectangleHeight.Text = Math.Round(rectangle.Height, 2).ToString();
                     break;
                 case Ellipse circle:
-                    Circle_Radius.Text = Math.Round(circle.Width / 2, 2).ToString();
+                    CircleRadius.Text = Math.Round(circle.Width / 2, 2).ToString();
                     break;
             }
         }
@@ -316,9 +320,16 @@ namespace GraphicsProject.Views
 
         #region FileManagement 
 
-        
+        private async void OpenImgButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await _imageManager.Open();
+        }
+
+        private async void SaveImgButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await _imageManager.Save();
+        }
 
         #endregion
-
     }
 }

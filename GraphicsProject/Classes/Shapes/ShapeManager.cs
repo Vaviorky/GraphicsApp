@@ -55,7 +55,6 @@ namespace GraphicsProject.Classes.Shapes
         {
             if (ModifyingShape) return;
 
-
             var shape = GetCurrentShape(shapeType);
             ResetCanvasIndexOfElements(shape);
             _shapes.Add(shape);

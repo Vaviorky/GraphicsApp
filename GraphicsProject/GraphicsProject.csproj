@@ -95,11 +95,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\ImageManagement\ImageManager.cs" />
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
     <Compile Include="Classes\Shapes\ShapeDrawer.cs" />
     <Compile Include="Classes\Shapes\ShapeManager.cs" />
     <Compile Include="Classes\Shapes\ShapeResizer.cs" />
     <Compile Include="Classes\Shapes\ShapePointer.cs" />
+    <Compile Include="Enums\ImageLoadError.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />
     <Compile Include="Views\Main.xaml.cs">
