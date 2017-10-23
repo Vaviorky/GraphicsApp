@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\ImageManagement\FastSplit.cs" />
     <Compile Include="Classes\ImageManagement\ImageManager.cs" />
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
     <Compile Include="Classes\Shapes\ShapeDrawer.cs" />

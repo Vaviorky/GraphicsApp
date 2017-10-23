@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -54,7 +56,7 @@ namespace GraphicsProject.Classes.ImageManagement
                     stopwatch.Start();
                     await LoadPpm(file);
                     stopwatch.Stop();
-                    Debug.WriteLine(stopwatch.ElapsedMilliseconds);
+                    Debug.WriteLine("Elapsed Time: " + stopwatch.ElapsedMilliseconds / 1000 + "." + stopwatch.ElapsedMilliseconds % 1000);
                 }
             }
         }
@@ -122,24 +124,35 @@ namespace GraphicsProject.Classes.ImageManagement
 
         private async Task LoadP3(StreamReader reader)
         {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
             reader.ReadLine();
 
             var parameters = LoadParameters(reader);
+
+            Debug.WriteLine("1: " + watch.ElapsedMilliseconds);
+
             if (parameters.Length == 0) return;
 
             int width = parameters[0];
             int height = parameters[1];
             int max = parameters[2];
 
-            byte[] rawData = await ReadImgInformation(reader, parameters[0], parameters[1]);
-            byte[] preparedData = LoadP3Img(width, height, max, rawData);
+            Debug.WriteLine("2: " + watch.ElapsedMilliseconds);
 
+            int[] rawData = await ReadImgInformation(reader, parameters[0], parameters[1]);
+            Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
+            byte[] preparedData = LoadP3Img(width, height, max, rawData);
+            Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
             var actualImage = new ImageBrush
             {
                 ImageSource = await ImageFromBytes(preparedData, width, height)
             };
-
+            Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
             _canvas.Background = actualImage;
+            watch.Stop();
+            Debug.WriteLine("6: " + watch.ElapsedMilliseconds);
 
         }
 
@@ -191,17 +204,16 @@ namespace GraphicsProject.Classes.ImageManagement
                 }
             } while (max == -1);
 
-            Debug.WriteLine("Width: " + width + ", Height: " + height + ", Max: " + max);
-
             return new[] { width, height, max };
         }
 
-        private byte[] LoadP3Img(int width, int height, int max, byte[] numbers)
+        private byte[] LoadP3Img(int width, int height, int max, int[] numbers)
         {
             byte[] array = new byte[height * width * 4];
             try
             {
-                for (int i = 0, j = 0; i < array.Length; i += 4, j += 3)
+                var length = array.Length;
+                for (int i = 0, j = 0; i < length; i += 4, j += 3)
                 {
                     array[i] = (byte)(numbers[j + 2] * 255 / max);
                     array[i + 1] = (byte)(numbers[j + 1] * 255 / max);
@@ -217,45 +229,87 @@ namespace GraphicsProject.Classes.ImageManagement
             return array;
         }
 
-        private async Task<byte[]> ReadImgInformation(StreamReader reader, int width, int height)
+        private int counter = 0;
+
+        private async Task<int[]> ReadImgInformation(StreamReader reader, int width, int height)
         {
-            byte[] numbers = new byte[width * height * 3];
+            int[] data = new int[width * height * 3];
+            int counter = 0;
 
-            var file = await reader.ReadToEndAsync();
-            var lines = file.Split('\n');
+            var splitter = new FastSplit(1);
 
-            var counter = 0;
-
-            foreach (string line in lines)
+            while (!reader.EndOfStream)
             {
-                var preparedLine = line.Replace("\t", " ");
-                var words = preparedLine.Split(' ');
+                var line = reader.ReadLine();
 
-                foreach (string word in words)
+                if (line.IndexOf('\t') != -1)
                 {
-                    if (word.Contains("#"))
-                    {
-                        break;
-                    }
+                    line = line.Replace('\t', ' ');
+                }
 
-                    if (word.Contains(" ") || word == "" || word.Contains("\t") || word.Contains("\0") || word.Contains("\n"))
-                    {
-                        continue;
-                    }
+                var length = splitter.SafeSplit(line, ' ');
+                var words = splitter.Results;
 
-                    try
-                    {
-                        numbers[counter++] = byte.Parse(word);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine(e);
-                        throw;
-                    }
+                for (var i = 0; i < length; i++)
+                {
+                    var word = words[i];
+                    if (word.IndexOf('#') != -1) break;
+                    if (IsCharacterInString(word)) continue;
+
+                    data[counter++] = ParseInt(word);
                 }
             }
-            return numbers;
+
+            return data;
         }
+
+        private int temp;
+        private int ParseInt(string str)
+        {
+            temp = 0;
+            var length = str.Length;
+            for (int i = 0; i < length; i++)
+                temp = temp * 10 + (str[i] - '0');
+
+            return temp;
+        }
+
+        private bool IsCharacterInString(string str)
+        {
+            if (str.Length == 0) return true;
+
+            for (int j = 0; j < str.Length; j++)
+            {
+                switch (str[j])
+                {
+                    case '\n':
+                        return true;
+                    case '\0':
+                        return true;
+                    case '\t':
+                        return true;
+                    case ' ':
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            return false;
+        }
+
+        private bool IsHashInString(string str)
+        {
+            for (int j = 0; j < str.Length; j++)
+            {
+                if (str[j] == '#')
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
 
         private async Task<WriteableBitmap> ImageFromBytes(byte[] data, int width, int height)
         {
