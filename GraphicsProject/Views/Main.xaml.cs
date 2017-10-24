@@ -332,14 +332,5 @@ namespace GraphicsProject.Views
         }
 
         #endregion
-        bool isZoomed = false;
-        double scalevalue = 0.0;
-        double scaleTHreshold = 10.0;
-        private void ScrollViewer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            int delta = e.GetCurrentPoint((UIElement)sender).Properties.MouseWheelDelta;
-            CanvasTransform.ScaleX += delta / 120;//you can set 120 to other value to change the sensitivity
-            CanvasTransform.ScaleY += delta / 120;
-        }
     }
 }

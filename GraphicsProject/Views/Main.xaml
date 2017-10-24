@@ -33,21 +33,16 @@
             <Grid>
                 <Grid Row="0" Background="Gray">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1000"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <ScrollViewer Name="ScrollViewer" Grid.Column="0" MinZoomFactor="1" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                    <ScrollViewer Name="ScrollViewer" Grid.Column="0" MinZoomFactor="0.2" MaxZoomFactor="30" ZoomMode="Enabled">
                         <Canvas 
                             Name="DrawingCanvas"
                             Background="White"
-                            PointerPressed="Canvas_OnPointerPressed" 
-                            PointerReleased="Canvas_PointerReleased">
-                            <Canvas.RenderTransform>
-                                <CompositeTransform x:Name="CanvasTransform"></CompositeTransform>
-                            </Canvas.RenderTransform>
-                        </Canvas>
+                            PointerPressed="Canvas_OnPointerPressed"
+                            PointerReleased="Canvas_PointerReleased"/>
                     </ScrollViewer>
-                    
                     
                     <Grid Grid.Column="1" Background="DimGray">
                         <Grid.RowDefinitions>

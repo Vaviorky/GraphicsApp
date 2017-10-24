@@ -22,6 +22,7 @@ namespace GraphicsProject.Classes.ImageManagement
     internal class ImageManager
     {
         private readonly Canvas _canvas;
+        private string p3Line = "";
 
         public ImageManager(Canvas canvas)
         {
@@ -71,9 +72,10 @@ namespace GraphicsProject.Classes.ImageManagement
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
                     var bytes = pixels.ToArray();
                     encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                        (uint)_canvas.ActualWidth, (uint)_canvas.ActualHeight, 96, 96, bytes);
+                        (uint)_canvas.ActualWidth, (uint)_canvas.ActualHeight, 32, 32, bytes);
 
                     await encoder.FlushAsync();
                 }
@@ -87,7 +89,7 @@ namespace GraphicsProject.Classes.ImageManagement
                 var decoder = await BitmapDecoder.CreateAsync(stream);
                 var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                var displayableImage = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+                var displayableImage = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
 
                 var sbs = new SoftwareBitmapSource();
                 await sbs.SetBitmapAsync(displayableImage);
@@ -136,13 +138,13 @@ namespace GraphicsProject.Classes.ImageManagement
             Debug.WriteLine("2: " + watch.ElapsedMilliseconds);
 
             int[] rawData = ReadP3ImgData(reader, parameters[0], parameters[1]);
-            //Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
-            //byte[] preparedData = LoadP3Img(width, height, max, rawData);
-            //Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
+            Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
+            byte[] preparedData = LoadP3Img(width, height, max, rawData);
+            Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
 
-            //await UpdateCanvas(preparedData, width, height);
+            await UpdateCanvas(preparedData, width, height);
 
-            //Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
+            Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
 
             watch.Stop();
             Debug.WriteLine("6: " + watch.ElapsedMilliseconds);
@@ -249,25 +251,24 @@ namespace GraphicsProject.Classes.ImageManagement
 
             do
             {
-                var line = reader.ReadLine().Replace("\t", " ");
+                var line = reader.ReadLine().Replace('\t', ' ');
                 var words = line.Split(' ');
                 for (int i = 0; i < words.Length; i++)
                 {
                     var word = words[i];
-                    if (word.Contains("#"))
+                    if (word.IndexOf('#') != -1)
                     {
                         break;
                     }
 
-                    if (word == "" || word.Contains(" ") || word.Contains("\t") || word.Contains("\0") ||
-                        word.Contains("\n"))
+                    if (IsCharacterInString(word))
                     {
                         continue;
                     }
 
                     try
                     {
-                        var number = int.Parse(word);
+                        var number = ParseInt(word);
                         if (width == -1)
                         {
                             width = number;
@@ -279,6 +280,22 @@ namespace GraphicsProject.Classes.ImageManagement
                         else if (max == -1)
                         {
                             max = number;
+                            for (int j = i + word.Length; j < words.Length; j++)
+                            {
+                                var newWord = words[j];
+
+                                if (newWord.IndexOf('#') != -1)
+                                {
+                                    break;
+                                }
+
+                                if (IsCharacterInString(newWord))
+                                {
+                                    continue;
+                                }
+                                p3Line += words[j];
+                            }
+
                         }
                     }
                     catch (Exception e)
@@ -322,35 +339,32 @@ namespace GraphicsProject.Classes.ImageManagement
             var splitter = new FastSplit(1);
             var buffer = new char[2048];
 
-            while (!reader.EndOfStream)
+            if (p3Line.Length != 0)
             {
-                reader.Read(buffer, 0, buffer.Length);
+                data[counter++] = ParseInt(p3Line);
             }
 
-            
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
 
+                if (line.IndexOf('\t') != -1)
+                {
+                    line = line.Replace('\t', ' ');
+                }
 
-            //while (!reader.EndOfStream)
-            //{
-            //    var line = reader.ReadLine();
+                var length = splitter.SafeSplit(line, ' ');
+                var words = splitter.Results;
 
-            //    if (line.IndexOf('\t') != -1)
-            //    {
-            //        line = line.Replace('\t', ' ');
-            //    }
+                for (var i = 0; i < length; i++)
+                {
+                    var word = words[i];
+                    if (word.IndexOf('#') != -1) break;
+                    if (IsCharacterInString(word)) continue;
 
-            //    var length = splitter.SafeSplit(line, ' ');
-            //    var words = splitter.Results;
-
-            //    for (var i = 0; i < length; i++)
-            //    {
-            //        var word = words[i];
-            //        if (word.IndexOf('#') != -1) break;
-            //        if (IsCharacterInString(word)) continue;
-
-            //        data[counter++] = ParseInt(word);
-            //    }
-            //}
+                    data[counter++] = ParseInt(word);
+                }
+            }
 
             return data;
         }
@@ -398,6 +412,7 @@ namespace GraphicsProject.Classes.ImageManagement
 
             var actualImage = new ImageBrush
             {
+                Stretch = Stretch.UniformToFill,
                 ImageSource = bitmap
             };
 
