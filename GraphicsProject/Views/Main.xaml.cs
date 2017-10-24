@@ -3,6 +3,7 @@ using GraphicsProject.Enums;
 using System.Diagnostics;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -18,7 +19,7 @@ namespace GraphicsProject.Views
         private ShapeType _shapeType;
         private ShapeManager _shapeManager;
 
-        private ImageManager _imageManager;
+        private readonly ImageManager _imageManager;
 
         private Point _startingPoint;
         private Point _endingPoint;
@@ -331,5 +332,14 @@ namespace GraphicsProject.Views
         }
 
         #endregion
+        bool isZoomed = false;
+        double scalevalue = 0.0;
+        double scaleTHreshold = 10.0;
+        private void ScrollViewer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            int delta = e.GetCurrentPoint((UIElement)sender).Properties.MouseWheelDelta;
+            CanvasTransform.ScaleX += delta / 120;//you can set 120 to other value to change the sensitivity
+            CanvasTransform.ScaleY += delta / 120;
+        }
     }
 }

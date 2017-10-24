@@ -51,12 +51,7 @@ namespace GraphicsProject.Classes.ImageManagement
                 }
                 else if (fileType.Equals(".ppm"))
                 {
-                    // Create new stopwatch.
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
                     await LoadPpm(file);
-                    stopwatch.Stop();
-                    Debug.WriteLine("Elapsed Time: " + stopwatch.ElapsedMilliseconds / 1000 + "." + stopwatch.ElapsedMilliseconds % 1000);
                 }
             }
         }
@@ -103,7 +98,6 @@ namespace GraphicsProject.Classes.ImageManagement
             }
         }
 
-
         private async Task LoadPpm(IStorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
@@ -117,7 +111,7 @@ namespace GraphicsProject.Classes.ImageManagement
                 }
                 else if (ppmType[0] == 'P' && ppmType[1] == '6')
                 {
-                    //wrong file format
+                    await LoadP6(binaryReader);
                 }
             }
         }
@@ -141,19 +135,110 @@ namespace GraphicsProject.Classes.ImageManagement
 
             Debug.WriteLine("2: " + watch.ElapsedMilliseconds);
 
-            int[] rawData = await ReadImgInformation(reader, parameters[0], parameters[1]);
-            Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
-            byte[] preparedData = LoadP3Img(width, height, max, rawData);
-            Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
-            var actualImage = new ImageBrush
-            {
-                ImageSource = await ImageFromBytes(preparedData, width, height)
-            };
-            Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
-            _canvas.Background = actualImage;
+            int[] rawData = ReadP3ImgData(reader, parameters[0], parameters[1]);
+            //Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
+            //byte[] preparedData = LoadP3Img(width, height, max, rawData);
+            //Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
+
+            //await UpdateCanvas(preparedData, width, height);
+
+            //Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
+
             watch.Stop();
             Debug.WriteLine("6: " + watch.ElapsedMilliseconds);
+        }
 
+        private async Task LoadP6(BinaryReader reader)
+        {
+            ReadWhitespace(reader);
+            int width = ReadValue(reader);
+            ReadWhitespace(reader);
+            int height = ReadValue(reader);
+            ReadWhitespace(reader);
+            int maximumColorValue = ReadValue(reader);
+
+            byte[] array = ReadP6Array(reader, width, height, maximumColorValue);
+
+            await UpdateCanvas(array, width, height);
+        }
+
+        private static byte[] ReadP6Array(BinaryReader reader, int width, int height, int max)
+        {
+            byte[] array = new byte[height * width * 4];
+            try
+            {
+                byte[] rgb;
+                short rInt16, gInt16, bInt16;
+                for (int i = 0; i < array.Length; i += 4)
+                {
+                    if (max > 255)
+                    {
+                        rgb = reader.ReadBytes(6);
+                        rInt16 = BitConverter.ToInt16(rgb, 0);
+                        gInt16 = BitConverter.ToInt16(rgb, 2);
+                        bInt16 = BitConverter.ToInt16(rgb, 4);
+                    }
+                    else
+                    {
+                        rgb = reader.ReadBytes(3);
+                        rInt16 = rgb[0];
+                        gInt16 = rgb[1];
+                        bInt16 = rgb[2];
+                    }
+                    array[i] = (byte)((bInt16 * 255) / max);
+                    array[i + 1] = (byte)((gInt16 * 255) / max);
+                    array[i + 2] = (byte)((rInt16 * 255) / max);
+                    array[i + 3] = 255;
+                }
+            }
+            catch (Exception e)
+            {
+                var messageDialog = new MessageDialog("Sorry, something gone wrong.");
+                messageDialog.ShowAsync();
+            }
+
+            return array;
+        }
+
+        private static void ReadWhitespace(BinaryReader reader)
+        {
+            char c = reader.ReadChar();
+
+            while (c == ' ' || c == '\t' || c == '\n' || c == '\0' || c == '#')
+            {
+                if (c == '#')
+                {
+                    reader.ReadChar();
+                    while (c != '\n')
+                    {
+                        try
+                        {
+                            c = reader.ReadChar();
+                        }
+                        catch (Exception)
+                        {
+                            reader.BaseStream.Seek(1, SeekOrigin.Current);
+                        }
+                    }
+                }
+                c = reader.ReadChar();
+            }
+
+            reader.BaseStream.Seek(-1, SeekOrigin.Current);
+        }
+
+        private static int ReadValue(BinaryReader reader)
+        {
+            StringBuilder builder = new StringBuilder();
+            char c = reader.ReadChar();
+
+            while (c != ' ' && c != '\t' && c != '\n' && c != '\0')
+            {
+                builder.Append(c);
+                c = reader.ReadChar();
+            }
+
+            return int.Parse(builder.ToString());
         }
 
         private int[] LoadParameters(StreamReader reader)
@@ -229,44 +314,50 @@ namespace GraphicsProject.Classes.ImageManagement
             return array;
         }
 
-        private int counter = 0;
-
-        private async Task<int[]> ReadImgInformation(StreamReader reader, int width, int height)
+        private int[] ReadP3ImgData(StreamReader reader, int width, int height)
         {
             int[] data = new int[width * height * 3];
             int counter = 0;
 
             var splitter = new FastSplit(1);
+            var buffer = new char[2048];
 
             while (!reader.EndOfStream)
             {
-                var line = reader.ReadLine();
-
-                if (line.IndexOf('\t') != -1)
-                {
-                    line = line.Replace('\t', ' ');
-                }
-
-                var length = splitter.SafeSplit(line, ' ');
-                var words = splitter.Results;
-
-                for (var i = 0; i < length; i++)
-                {
-                    var word = words[i];
-                    if (word.IndexOf('#') != -1) break;
-                    if (IsCharacterInString(word)) continue;
-
-                    data[counter++] = ParseInt(word);
-                }
+                reader.Read(buffer, 0, buffer.Length);
             }
+
+            
+
+
+            //while (!reader.EndOfStream)
+            //{
+            //    var line = reader.ReadLine();
+
+            //    if (line.IndexOf('\t') != -1)
+            //    {
+            //        line = line.Replace('\t', ' ');
+            //    }
+
+            //    var length = splitter.SafeSplit(line, ' ');
+            //    var words = splitter.Results;
+
+            //    for (var i = 0; i < length; i++)
+            //    {
+            //        var word = words[i];
+            //        if (word.IndexOf('#') != -1) break;
+            //        if (IsCharacterInString(word)) continue;
+
+            //        data[counter++] = ParseInt(word);
+            //    }
+            //}
 
             return data;
         }
 
-        private int temp;
-        private int ParseInt(string str)
+        private static int ParseInt(string str)
         {
-            temp = 0;
+            int temp = 0;
             var length = str.Length;
             for (int i = 0; i < length; i++)
                 temp = temp * 10 + (str[i] - '0');
@@ -297,21 +388,7 @@ namespace GraphicsProject.Classes.ImageManagement
             return false;
         }
 
-        private bool IsHashInString(string str)
-        {
-            for (int j = 0; j < str.Length; j++)
-            {
-                if (str[j] == '#')
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
-
-        private async Task<WriteableBitmap> ImageFromBytes(byte[] data, int width, int height)
+        private async Task UpdateCanvas(byte[] data, int width, int height)
         {
             WriteableBitmap bitmap = new WriteableBitmap(width, height);
             using (Stream bitmapStream = bitmap.PixelBuffer.AsStream())
@@ -319,7 +396,14 @@ namespace GraphicsProject.Classes.ImageManagement
                 await bitmapStream.WriteAsync(data, 0, data.Length);
             }
 
-            return bitmap;
+            var actualImage = new ImageBrush
+            {
+                ImageSource = bitmap
+            };
+
+            _canvas.Background = actualImage;
+            _canvas.Width = width;
+            _canvas.Height = height;
         }
 
         private void ShowErrorMessage(ImageLoadError error, Exception e = null)
