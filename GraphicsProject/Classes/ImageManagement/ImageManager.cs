@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -57,7 +58,7 @@ namespace GraphicsProject.Classes.ImageManagement
             }
         }
 
-        public async Task Save()
+        public async Task Save(double compression)
         {
             var renderTargetBitmap = new RenderTargetBitmap();
             await renderTargetBitmap.RenderAsync(_canvas);
@@ -71,7 +72,12 @@ namespace GraphicsProject.Classes.ImageManagement
 
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    var propertySet = new BitmapPropertySet();
+                    var qualityValue = new BitmapTypedValue(compression / 10, PropertyType.Single);
+
+                    propertySet.Add("ImageQuality", qualityValue);
+
+                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
                     encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
                     var bytes = pixels.ToArray();
                     encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,

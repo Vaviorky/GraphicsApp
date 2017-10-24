@@ -328,7 +328,14 @@ namespace GraphicsProject.Views
 
         private async void SaveImgButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await _imageManager.Save();
+            JPEGCompression compression = new JPEGCompression();
+
+            var result = await compression.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                await _imageManager.Save(compression.CompressionValue);
+            }
         }
 
         #endregion
