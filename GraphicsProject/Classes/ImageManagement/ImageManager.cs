@@ -23,7 +23,9 @@ namespace GraphicsProject.Classes.ImageManagement
     internal class ImageManager
     {
         private readonly Canvas _canvas;
-        private string p3Line = "";
+        private string _p3Line = "";
+
+        private WriteableBitmap _writeableBitmap;
 
         public ImageManager(Canvas canvas)
         {
@@ -60,31 +62,28 @@ namespace GraphicsProject.Classes.ImageManagement
 
         public async Task Save(double compression)
         {
-            var renderTargetBitmap = new RenderTargetBitmap();
-            await renderTargetBitmap.RenderAsync(_canvas);
-
             var picker = new FileSavePicker();
             picker.FileTypeChoices.Add("Obraz JPEG", new[] { ".jpg" });
             var file = await picker.PickSaveFileAsync();
-            if (file != null)
+
+            if (file == null || _writeableBitmap == null) return;
+
+            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
-                var pixels = await renderTargetBitmap.GetPixelsAsync();
+                var propertySet = new BitmapPropertySet();
+                var qualityValue = new BitmapTypedValue(compression / 10, PropertyType.Single);
 
-                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    var propertySet = new BitmapPropertySet();
-                    var qualityValue = new BitmapTypedValue(compression / 10, PropertyType.Single);
+                propertySet.Add("ImageQuality", qualityValue);
 
-                    propertySet.Add("ImageQuality", qualityValue);
+                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
+                encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                Stream pixelStream = _writeableBitmap.PixelBuffer.AsStream();
+                byte[] pixels = new byte[pixelStream.Length];
+                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
+                    (uint)_writeableBitmap.PixelWidth, (uint)_writeableBitmap.PixelHeight, 96, 96, pixels);
 
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
-                    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
-                    var bytes = pixels.ToArray();
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                        (uint)_canvas.ActualWidth, (uint)_canvas.ActualHeight, 32, 32, bytes);
-
-                    await encoder.FlushAsync();
-                }
+                await encoder.FlushAsync();
             }
         }
 
@@ -126,14 +125,12 @@ namespace GraphicsProject.Classes.ImageManagement
 
         private async Task LoadP3(StreamReader reader)
         {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             reader.ReadLine();
 
             var parameters = LoadParameters(reader);
-
-            Debug.WriteLine("1: " + watch.ElapsedMilliseconds);
 
             if (parameters.Length == 0) return;
 
@@ -141,23 +138,20 @@ namespace GraphicsProject.Classes.ImageManagement
             int height = parameters[1];
             int max = parameters[2];
 
-            Debug.WriteLine("2: " + watch.ElapsedMilliseconds);
-
             int[] rawData = ReadP3ImgData(reader, parameters[0], parameters[1]);
-            Debug.WriteLine("3: " + watch.ElapsedMilliseconds);
             byte[] preparedData = LoadP3Img(width, height, max, rawData);
-            Debug.WriteLine("4: " + watch.ElapsedMilliseconds);
 
             await UpdateCanvas(preparedData, width, height);
+            stopwatch.Stop();
 
-            Debug.WriteLine("5: " + watch.ElapsedMilliseconds);
-
-            watch.Stop();
-            Debug.WriteLine("6: " + watch.ElapsedMilliseconds);
+            await ShowElapsedTime(stopwatch.ElapsedMilliseconds);
         }
 
         private async Task LoadP6(BinaryReader reader)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             ReadWhitespace(reader);
             int width = ReadValue(reader);
             ReadWhitespace(reader);
@@ -168,9 +162,13 @@ namespace GraphicsProject.Classes.ImageManagement
             byte[] array = ReadP6Array(reader, width, height, maximumColorValue);
 
             await UpdateCanvas(array, width, height);
+
+            stopwatch.Stop();
+
+            await ShowElapsedTime(stopwatch.ElapsedMilliseconds);
         }
 
-        private static byte[] ReadP6Array(BinaryReader reader, int width, int height, int max)
+        private byte[] ReadP6Array(BinaryReader reader, int width, int height, int max)
         {
             byte[] array = new byte[height * width * 4];
             try
@@ -201,8 +199,7 @@ namespace GraphicsProject.Classes.ImageManagement
             }
             catch (Exception e)
             {
-                var messageDialog = new MessageDialog("Sorry, something gone wrong.");
-                messageDialog.ShowAsync();
+                ShowErrorMessage(ImageLoadError.Exception, e);
             }
 
             return array;
@@ -299,7 +296,7 @@ namespace GraphicsProject.Classes.ImageManagement
                                 {
                                     continue;
                                 }
-                                p3Line += words[j];
+                                _p3Line += words[j];
                             }
 
                         }
@@ -307,7 +304,7 @@ namespace GraphicsProject.Classes.ImageManagement
                     catch (Exception e)
                     {
                         ShowErrorMessage(ImageLoadError.Exception, e);
-                        return new int[] { };
+                        return new[] { 0, 0, 1 };
                     }
                 }
             } while (max == -1);
@@ -331,8 +328,8 @@ namespace GraphicsProject.Classes.ImageManagement
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
-                throw;
+                ShowErrorMessage(ImageLoadError.Exception, e);
+                return null;
             }
             return array;
         }
@@ -343,11 +340,10 @@ namespace GraphicsProject.Classes.ImageManagement
             int counter = 0;
 
             var splitter = new FastSplit(1);
-            var buffer = new char[2048];
 
-            if (p3Line.Length != 0)
+            if (_p3Line.Length != 0)
             {
-                data[counter++] = ParseInt(p3Line);
+                data[counter++] = ParseInt(_p3Line);
             }
 
             while (!reader.EndOfStream)
@@ -410,8 +406,8 @@ namespace GraphicsProject.Classes.ImageManagement
 
         private async Task UpdateCanvas(byte[] data, int width, int height)
         {
-            WriteableBitmap bitmap = new WriteableBitmap(width, height);
-            using (Stream bitmapStream = bitmap.PixelBuffer.AsStream())
+            _writeableBitmap = new WriteableBitmap(width, height);
+            using (Stream bitmapStream = _writeableBitmap.PixelBuffer.AsStream())
             {
                 await bitmapStream.WriteAsync(data, 0, data.Length);
             }
@@ -419,7 +415,7 @@ namespace GraphicsProject.Classes.ImageManagement
             var actualImage = new ImageBrush
             {
                 Stretch = Stretch.UniformToFill,
-                ImageSource = bitmap
+                ImageSource = _writeableBitmap
             };
 
             _canvas.Background = actualImage;
@@ -427,7 +423,7 @@ namespace GraphicsProject.Classes.ImageManagement
             _canvas.Height = height;
         }
 
-        private void ShowErrorMessage(ImageLoadError error, Exception e = null)
+        private async void ShowErrorMessage(ImageLoadError error, Exception e = null)
         {
             var dialog = new MessageDialog("")
             {
@@ -450,7 +446,16 @@ namespace GraphicsProject.Classes.ImageManagement
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
-            dialog.ShowAsync();
+            await dialog.ShowAsync();
+        }
+
+        private async Task ShowElapsedTime(long timeMilis)
+        {
+            if (timeMilis > 300)
+            {
+                var dialog = new MessageDialog("Czas przetwarzania: " + timeMilis / 1000 + "." + timeMilis % 1000);
+                await dialog.ShowAsync();
+            }
         }
     }
 }
