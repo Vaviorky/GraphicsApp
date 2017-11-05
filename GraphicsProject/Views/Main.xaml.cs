@@ -13,17 +13,21 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
+using GraphicsProject.Classes.Main;
 using GraphicsProject.Classes.Shapes;
 
 namespace GraphicsProject.Views
 {
     public sealed partial class Main : Page
     {
+        private readonly ImageManager _imageManager;
+
         private ShapeType _shapeType;
         private ShapeManager _shapeManager;
-
-        private readonly ImageManager _imageManager;
+        private AppManager _appManager;
+        private ColorPicker _colorPicker;
 
         private Point _startingPoint;
         private Point _endingPoint;
@@ -34,13 +38,10 @@ namespace GraphicsProject.Views
         public Main()
         {
             this.InitializeComponent();
+            _appManager = new AppManager();
             _imageManager = new ImageManager(DrawingCanvas);
+            //_colorPicker = new ColorPicker(ColorPickerImage);
             InitializeShapeManager();
-        }
-
-        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
-        {
-            //MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
         }
 
         #region Shapes
@@ -348,5 +349,16 @@ namespace GraphicsProject.Views
         }
 
         #endregion
+
+        #region ColorPicker
+
+        private void PickerCanvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
     }
 }
