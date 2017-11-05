@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\ColorPicker\ColorPicker.cs" />
     <Compile Include="Classes\ImageManagement\FastSplit.cs" />
     <Compile Include="Classes\ImageManagement\ImageManager.cs" />
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
@@ -119,6 +120,24 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Cube3D\RGB3DCube.exe" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\Assembly-CSharp.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\Mono.Security.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\mscorlib.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\System.Core.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\System.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\UnityEngine.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\UnityEngine.dll.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\UnityEngine.Networking.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\UnityEngine.Timeline.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Managed\UnityEngine.UI.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Mono\EmbedRuntime\mono.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Mono\EmbedRuntime\MonoPosixHelper.dll" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\1.0\DefaultWsdlHelpGenerator.aspx" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\2.0\DefaultWsdlHelpGenerator.aspx" />
+    <Content Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\mconfig\config.xml" />
     <Content Include="Assets\ellipse.png" />
     <Content Include="Assets\line.png" />
     <Content Include="Assets\rectangle.png" />
@@ -153,7 +172,29 @@
       <Version>2.3.4.247</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.15063.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Cube3D\RGB3DCube_Data\app.info" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\boot.config" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\globalgamemanagers" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\globalgamemanagers.assets" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\level0" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\1.0\machine.config" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\2.0\Browsers\Compat.browser" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\2.0\machine.config" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\2.0\settings.map" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\2.0\web.config" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\browscap.ini" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Mono\etc\mono\config" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Resources\unity default resources" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\Resources\unity_builtin_extra" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\sharedassets0.assets" />
+    <None Include="Assets\Cube3D\RGB3DCube_Data\sharedassets0.assets.resS" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

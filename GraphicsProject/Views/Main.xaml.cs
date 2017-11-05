@@ -1,7 +1,11 @@
 ﻿using System;
 using GraphicsProject.Enums;
 using System.Diagnostics;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Storage;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -36,7 +40,7 @@ namespace GraphicsProject.Views
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
-            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+            //MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
         }
 
         #region Shapes
@@ -336,6 +340,11 @@ namespace GraphicsProject.Views
             {
                 await _imageManager.Save(compression.CompressionValue);
             }
+        }
+
+        private void ExitAppButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            CoreApplication.Exit();
         }
 
         #endregion

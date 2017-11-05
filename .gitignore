@@ -19,9 +19,15 @@ SentryPortable/Sentry.UWP.Tests/RavenConfig.cs
 [Dd]ebug/
 [Rr]elease/
 x64/
-build/
 [Bb]in/
 [Oo]bj/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Assets/AssetStoreTools*
+v15/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -155,3 +161,13 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+# Unity builds
+*.apk
+*.unitypackage
+
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
