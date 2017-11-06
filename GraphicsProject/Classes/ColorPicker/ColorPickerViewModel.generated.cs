@@ -117,13 +117,13 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #region Cyan
 
-        private int cyan;
+        private float cyan;
 
-        partial void OnCyanChanging(ref int value);
+        partial void OnCyanChanging(ref float value);
 
         partial void OnCyanChanged();
 
-        public int Cyan
+        public float Cyan
         {
             get
             {
@@ -135,7 +135,7 @@ namespace GraphicsProject.Classes.ColorPicker
                 if (this.cyan != value)
                 {
                     this.OnCyanChanging(ref value);
-                    this.SetProperty<int>(ref this.cyan, value);
+                    this.SetProperty<float>(ref this.cyan, value);
                     this.OnCyanChanged();
                 }
             }
@@ -145,13 +145,13 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #region Magenta
 
-        private int magenta;
+        private float magenta;
 
-        partial void OnMagentaChanging(ref int value);
+        partial void OnMagentaChanging(ref float value);
 
         partial void OnMagentaChanged();
 
-        public int Magenta
+        public float Magenta
         {
             get
             {
@@ -163,7 +163,7 @@ namespace GraphicsProject.Classes.ColorPicker
                 if (this.magenta != value)
                 {
                     this.OnMagentaChanging(ref value);
-                    this.SetProperty<int>(ref this.magenta, value);
+                    this.SetProperty<float>(ref this.magenta, value);
                     this.OnMagentaChanged();
                 }
             }
@@ -173,13 +173,13 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #region Yellow
 
-        private int yellow;
+        private float yellow;
 
-        partial void OnYellowChanging(ref int value);
+        partial void OnYellowChanging(ref float value);
 
         partial void OnYellowChanged();
 
-        public int Yellow
+        public float Yellow
         {
             get
             {
@@ -191,7 +191,7 @@ namespace GraphicsProject.Classes.ColorPicker
                 if (this.yellow != value)
                 {
                     this.OnYellowChanging(ref value);
-                    this.SetProperty<int>(ref this.yellow, value);
+                    this.SetProperty<float>(ref this.yellow, value);
                     this.OnYellowChanged();
                 }
             }
@@ -201,13 +201,13 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #region Black
 
-        private int black;
+        private float black;
 
-        partial void OnBlackChanging(ref int value);
+        partial void OnBlackChanging(ref float value);
 
         partial void OnBlackChanged();
 
-        public int Black
+        public float Black
         {
             get
             {
@@ -219,7 +219,7 @@ namespace GraphicsProject.Classes.ColorPicker
                 if (this.black != value)
                 {
                     this.OnBlackChanging(ref value);
-                    this.SetProperty<int>(ref this.black, value);
+                    this.SetProperty<float>(ref this.black, value);
                     this.OnBlackChanged();
                 }
             }
@@ -334,221 +334,5 @@ namespace GraphicsProject.Classes.ColorPicker
             }
         }
         #endregion
-
-        #region RedStartColor
-
-        private string redStartColor;
-
-        partial void OnRedStartColorChanging(ref string value);
-
-        partial void OnRedStartColorChanged();
-
-        public string RedStartColor
-        {
-            get
-            {
-                return this.redStartColor;
-            }
-
-            set
-            {
-                if (this.redStartColor != value)
-                {
-                    this.OnRedStartColorChanging(ref value);
-                    this.SetProperty<string>(ref this.redStartColor, value);
-                    this.OnRedStartColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region RedEndColor
-
-        private string redEndColor;
-
-        partial void OnRedEndColorChanging(ref string value);
-
-        partial void OnRedEndColorChanged();
-
-        public string RedEndColor
-        {
-            get
-            {
-                return this.redEndColor;
-            }
-
-            set
-            {
-                if (this.redEndColor != value)
-                {
-                    this.OnRedEndColorChanging(ref value);
-                    this.SetProperty<string>(ref this.redEndColor, value);
-                    this.OnRedEndColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region GreenStartColor
-
-        private string greenStartColor;
-
-        partial void OnGreenStartColorChanging(ref string value);
-
-        partial void OnGreenStartColorChanged();
-
-        public string GreenStartColor
-        {
-            get
-            {
-                return this.greenStartColor;
-            }
-
-            set
-            {
-                if (this.greenStartColor != value)
-                {
-                    this.OnGreenStartColorChanging(ref value);
-                    this.SetProperty<string>(ref this.greenStartColor, value);
-                    this.OnGreenStartColorChanged();
-                }
-            }
-        }
-        #endregion 
-
-        #region GreenEndColor
-
-        private string greenEndColor;
-
-        partial void OnGreenEndColorChanging(ref string value);
-
-        partial void OnGreenEndColorChanged();
-
-        public string GreenEndColor
-        {
-            get
-            {
-                return this.greenEndColor;
-            }
-
-            set
-            {
-                if (this.greenEndColor != value)
-                {
-                    this.OnGreenEndColorChanging(ref value);
-                    this.SetProperty<string>(ref this.greenEndColor, value);
-                    this.OnGreenEndColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region BlueStartColor
-
-        private string blueStartColor;
-
-        partial void OnBlueStartColorChanging(ref string value);
-
-        partial void OnBlueStartColorChanged();
-
-        public string BlueStartColor
-        {
-            get
-            {
-                return this.blueStartColor;
-            }
-
-            set
-            {
-                if (this.blueStartColor != value)
-                {
-                    this.OnBlueStartColorChanging(ref value);
-                    this.SetProperty<string>(ref this.blueStartColor, value);
-                    this.OnBlueStartColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region BlueEndColor
-
-        private string blueEndColor;
-
-        partial void OnBlueEndColorChanging(ref string value);
-
-        partial void OnBlueEndColorChanged();
-
-        public string BlueEndColor
-        {
-            get
-            {
-                return this.blueEndColor;
-            }
-
-            set
-            {
-                if (this.blueEndColor != value)
-                {
-                    this.OnBlueEndColorChanging(ref value);
-                    this.SetProperty<string>(ref this.blueEndColor, value);
-                    this.OnBlueEndColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region AlphaStartColor
-
-        private string alphaStartColor;
-
-        partial void OnAlphaStartColorChanging(ref string value);
-
-        partial void OnAlphaStartColorChanged();
-
-        public string AlphaStartColor
-        {
-            get
-            {
-                return this.alphaStartColor;
-            }
-
-            set
-            {
-                if (this.alphaStartColor != value)
-                {
-                    this.OnAlphaStartColorChanging(ref value);
-                    this.SetProperty<string>(ref this.alphaStartColor, value);
-                    this.OnAlphaStartColorChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region AlphaEndColor
-
-        private string alphaEndColor;
-
-        partial void OnAlphaEndColorChanging(ref string value);
-
-        partial void OnAlphaEndColorChanged();
-
-        public string AlphaEndColor
-        {
-            get
-            {
-                return this.alphaEndColor;
-            }
-
-            set
-            {
-                if (this.alphaEndColor != value)
-                {
-                    this.OnAlphaEndColorChanging(ref value);
-                    this.SetProperty<string>(ref this.alphaEndColor, value);
-                    this.OnAlphaEndColorChanged();
-                }
-            }
-        }
-        #endregion 
     }
 }

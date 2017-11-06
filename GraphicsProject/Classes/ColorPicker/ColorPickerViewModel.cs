@@ -31,55 +31,32 @@ namespace GraphicsProject.Classes.ColorPicker
             green = color.G;
             blue = color.B;
 
-            redStartColor = $"#{0xff:X2}{0:X2}{color.G:X2}{color.B:X2}";
-            redEndColor = $"#{0xff:X2}{0xff:X2}{color.G:X2}{color.B:X2}";
-            greenStartColor = $"#{0xff:X2}{color.R:X2}{0:X2}{color.B:X2}";
-            greenEndColor = $"#{0xff:X2}{color.R:X2}{0xff:X2}{color.B:X2}";
-            blueStartColor = $"#{0xff:X2}{color.R:X2}{color.G:X2}{0:X2}";
-            blueEndColor = $"#{0xff:X2}{color.R:X2}{color.G:X2}{0xff:X2}";
-            alphaStartColor = $"#{0:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
-            alphaEndColor = $"#{0xff:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+            black = Math.Min(1 - red / 256f, Math.Min(1 - green / 256f, 1 - blue / 256f));
+            cyan = (1 - red / 256f - black) / (1 - black);
+            magenta = (1 - green / 256f - black) / (1 - black);
+            yellow = (1 - blue / 256f - black) / (1 - black);
 
-            var hsv = ToHSV(color);
+            var hsv = ToHsv(color);
             var h = FromHsv(hsv[0], 1f, 1f);
             hueColor = string.Format("#FF{0:X2}{1:X2}{2:X2}", h.R, h.G, h.B);
 
             OnPropertyChanged("Color");
 
             OnPropertyChanged("Red");
-            OnPropertyChanged("RedString");
             OnPropertyChanged("Green");
-            OnPropertyChanged("GreenString");
             OnPropertyChanged("Blue");
-            OnPropertyChanged("BlueString");
 
             OnPropertyChanged("Cyan");
-            OnPropertyChanged("CyanString");
             OnPropertyChanged("Magenta");
-            OnPropertyChanged("MagentaString");
             OnPropertyChanged("Yellow");
-            OnPropertyChanged("YellowString");
             OnPropertyChanged("Black");
-            OnPropertyChanged("BlackString");
-
-            OnPropertyChanged("Alpha");
-            OnPropertyChanged("AlphaString");
-
-            OnPropertyChanged("RedStartColor");
-            OnPropertyChanged("RedEndColor");
-            OnPropertyChanged("GreenStartColor");
-            OnPropertyChanged("GreenEndColor");
-            OnPropertyChanged("BlueStartColor");
-            OnPropertyChanged("BlueEndColor");
-            OnPropertyChanged("AlphaStartColor");
-            OnPropertyChanged("AlphaEndColor");
 
             OnPropertyChanged("HueColor");
         }
 
         private void UpdatePickPoint()
         {
-            var hsv = ToHSV((Color)Converter.Convert(color, typeof(Color), null, null));
+            var hsv = ToHsv((Color)Converter.Convert(color, typeof(Color), null, null));
             pickPointX = PickerWidth * hsv[1];
             pickPointY = PickerHeight * (1 - hsv[2]);
             colorSpectrumPoint = PickerHeight * hsv[0] / 360f;
@@ -89,7 +66,7 @@ namespace GraphicsProject.Classes.ColorPicker
             OnPropertyChanged("ColorSpectrumPoint");
         }
 
-        private static float[] ToHSV(Color color)
+        private static float[] ToHsv(Color color)
         {
             var rgb = new[]
             {
@@ -227,10 +204,31 @@ namespace GraphicsProject.Classes.ColorPicker
             UpdatePickPoint();
         }
 
+        partial void OnCyanChanged()
+        {
+
+        }
+
+        partial void OnMagentaChanged()
+        {
+
+        }
+
+        partial void OnYellowChanged()
+        {
+
+        }
+
+        partial void OnBlackChanged()
+        {
+
+
+        }
+
         partial void OnColorSpectrumPointChanged()
         {
             var old = (Color)Converter.Convert(color, typeof(Color), null, null);
-            var hsv = ToHSV(old);
+            var hsv = ToHsv(old);
             hsv[0] = (float)(colorSpectrumPoint * 360f / PickerHeight);
             var updated = FromHsv(hsv[0], hsv[1], hsv[2]);
             updated.A = old.A;
@@ -243,7 +241,7 @@ namespace GraphicsProject.Classes.ColorPicker
         public void OnPickPointChanged()
         {
             var old = (Color)Converter.Convert(hueColor, typeof(Color), null, null);
-            var hsv = ToHSV(old);
+            var hsv = ToHsv(old);
             var updated = FromHsv(hsv[0], (float)(pickPointX / PickerWidth),
                 1f - (float)(pickPointY / PickerHeight));
             updated.A = old.A;
