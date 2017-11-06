@@ -24,17 +24,20 @@ namespace GraphicsProject.Classes.ColorPicker
             UpdatePickPoint();
         }
 
-        private void UpdateColor(Color color)
+        private void UpdateColor(Color color, bool updateCmyk = true)
         {
             this.color = $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
             red = color.R;
             green = color.G;
             blue = color.B;
 
-            black = Math.Min(1 - red / 256f, Math.Min(1 - green / 256f, 1 - blue / 256f));
-            cyan = (1 - red / 256f - black) / (1 - black);
-            magenta = (1 - green / 256f - black) / (1 - black);
-            yellow = (1 - blue / 256f - black) / (1 - black);
+            if (updateCmyk)
+            {
+                black = Math.Min(1 - red / 256f, Math.Min(1 - green / 256f, 1 - blue / 256f));
+                cyan = (1 - red / 256f - black) / (1 - black);
+                magenta = (1 - green / 256f - black) / (1 - black);
+                yellow = (1 - blue / 256f - black) / (1 - black);
+            }
 
             var hsv = ToHsv(color);
             var h = FromHsv(hsv[0], 1f, 1f);
@@ -206,23 +209,37 @@ namespace GraphicsProject.Classes.ColorPicker
 
         partial void OnCyanChanged()
         {
-
+            UpdateCmyk();
         }
 
         partial void OnMagentaChanged()
         {
-
+            UpdateCmyk();
         }
 
         partial void OnYellowChanged()
         {
-
+            UpdateCmyk();
         }
 
         partial void OnBlackChanged()
         {
+            UpdateCmyk();
+        }
 
-
+        private void UpdateCmyk()
+        {
+            var tempRed = 1 - Math.Min(1, cyan * (1 - black) + black) * 256;
+            var tempGreen = 1 - Math.Min(1, magenta * (1 - black) + black) * 256;
+            var tempBlue = 1 - Math.Min(1, yellow * (1 - black) + black) * 256;
+            var updated = new Color
+            {
+                R = (byte)tempRed,
+                G = (byte)tempGreen,
+                B = (byte)tempBlue
+            };
+            UpdateColor(updated, false);
+            UpdatePickPoint();
         }
 
         partial void OnColorSpectrumPointChanged()

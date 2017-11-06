@@ -220,7 +220,7 @@
                             </Grid>
                         </Canvas>
                     </Grid>
-                    <Rectangle x:Name="ColorSpectrum" Grid.Column="2" Grid.Row="2" PointerPressed="OnHuePressed"> 
+                    <Rectangle x:Name="ColorSpectrum" Grid.Column="2" Grid.Row="2" PointerPressed="OnHuePressed">
                         <Rectangle.Fill>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                 <GradientStop Offset="0" Color="#FFFF0000"/>
@@ -297,8 +297,7 @@
                         <TextBlock Text="C:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
                                  Text="{Binding Cyan, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
-                                 InputScope="Number"
-                                 MaxLength="3"/>
+                                 InputScope="Number"/>
                     </Grid>
                     <Grid Grid.Column="1" Name="MColorGrid" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -308,8 +307,7 @@
                         <TextBlock Text="M:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
                                  Text="{Binding Magenta, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
-                                 InputScope="Number"
-                                 MaxLength="3"/>
+                                 InputScope="Number"/>
                     </Grid>
                     <Grid Grid.Column="2" Name="YColorGrid" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -319,8 +317,7 @@
                         <TextBlock Text="Y:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
                                  Text="{Binding Yellow, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
-                                 InputScope="Number"
-                                 MaxLength="3"/>
+                                 InputScope="Number"/>
                     </Grid>
                     <Grid Grid.Column="3" Name="KColorGrid" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -330,8 +327,7 @@
                         <TextBlock Text="K:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
                                  Text="{Binding Black, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
-                                 InputScope="Number"
-                                 MaxLength="3"/>
+                                 InputScope="Number"/>
                     </Grid>
                 </Grid>
             </Grid>
