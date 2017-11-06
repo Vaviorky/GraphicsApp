@@ -1,13 +1,8 @@
 ﻿using System;
-using GraphicsProject.Enums;
 using System.Diagnostics;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Storage;
-using Windows.System;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -17,6 +12,7 @@ using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Main;
 using GraphicsProject.Classes.Shapes;
+using GraphicsProject.Enums;
 
 namespace GraphicsProject.Views
 {
@@ -26,21 +22,19 @@ namespace GraphicsProject.Views
 
         private ShapeType _shapeType;
         private ShapeManager _shapeManager;
-        private AppManager _appManager;
-        private ColorPicker _colorPicker;
+
+        public ColorPickerViewModel ViewModel { get; set; } = new ColorPickerViewModel();
 
         private Point _startingPoint;
         private Point _endingPoint;
         private bool _canStartCreatingShape = true;
-        private bool _hasShapeBeenSelected = false;
+        private bool _hasShapeBeenSelected;
         private bool _mouseDownOnCanvas;
 
         public Main()
         {
-            this.InitializeComponent();
-            _appManager = new AppManager();
+            InitializeComponent();
             _imageManager = new ImageManager(DrawingCanvas);
-            //_colorPicker = new ColorPicker(ColorPickerImage);
             InitializeShapeManager();
         }
 
@@ -96,11 +90,11 @@ namespace GraphicsProject.Views
 
         private void InitializeShapeManager()
         {
-            this._shapeManager = new ShapeManager(DrawingCanvas);
+            _shapeManager = new ShapeManager(DrawingCanvas);
             _shapeManager.OnShapeSelection += OnShapeSelection;
             _shapeManager.OnShapeParameterChange += UpdateTextFields;
             _shapeManager.OnShapeModificationComplete += ResetDrawing;
-            this._shapeType = ShapeType.Line;
+            _shapeType = ShapeType.Line;
         }
 
         private void Canvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -352,13 +346,71 @@ namespace GraphicsProject.Views
 
         #region ColorPicker
 
-        private void PickerCanvas_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnPickerPressed(object sender, PointerRoutedEventArgs e)
         {
+            PickColor(e.GetCurrentPoint(PickerCanvas).Position);
+            PickerCanvas.CapturePointer(e.Pointer);
 
+            void Moved(object s, PointerRoutedEventArgs args)
+            {
+                PickColor(args.GetCurrentPoint(PickerCanvas).Position);
+            }
+
+            void Released(object s, PointerRoutedEventArgs args)
+            {
+                PickerCanvas.ReleasePointerCapture(args.Pointer);
+                PickColor(args.GetCurrentPoint(PickerCanvas).Position);
+                PickerCanvas.PointerMoved -= Moved;
+                PickerCanvas.PointerReleased -= Released;
+            }
+
+            PickerCanvas.PointerMoved += Moved;
+            PickerCanvas.PointerReleased += Released;
+        }
+
+        private void OnHuePressed(object sender, PointerRoutedEventArgs e)
+        {
+            ChangeHue(e.GetCurrentPoint(ColorSpectrum).Position.Y);
+            ColorSpectrum.CapturePointer(e.Pointer);
+
+            void Moved(object s, PointerRoutedEventArgs args)
+            {
+                ChangeHue(args.GetCurrentPoint(ColorSpectrum).Position.Y);
+            }
+
+            void Released(object s, PointerRoutedEventArgs args)
+            {
+                ColorSpectrum.ReleasePointerCapture(args.Pointer);
+                ChangeHue(args.GetCurrentPoint(ColorSpectrum).Position.Y);
+                ColorSpectrum.PointerMoved -= Moved;
+                ColorSpectrum.PointerReleased -= Released;
+            }
+
+            ColorSpectrum.PointerMoved += Moved;
+            ColorSpectrum.PointerReleased += Released;
+        }
+
+        private void ChangeHue(double y)
+        {
+            var py = Math.Max(0d, y);
+            py = Math.Min(ColorSpectrum.ActualHeight, py);
+
+            ViewModel.ColorSpectrumPoint = Math.Round(py, MidpointRounding.AwayFromZero);
+        }
+
+        private void PickColor(Point point)
+        {
+            var px = Math.Max(0d, point.X);
+            px = Math.Min(PickerCanvas.ActualWidth, px);
+            var py = Math.Max(0d, point.Y);
+            py = Math.Min(PickerCanvas.ActualHeight, py);
+
+            ViewModel.PickPointX = Math.Round(px, MidpointRounding.AwayFromZero);
+            ViewModel.PickPointY = Math.Round(py, MidpointRounding.AwayFromZero);
+            ViewModel.OnPickPointChanged();
         }
 
         #endregion
-
 
     }
 }
