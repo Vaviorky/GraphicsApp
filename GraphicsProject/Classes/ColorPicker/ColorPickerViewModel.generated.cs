@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,31 +63,6 @@ namespace GraphicsProject.Classes.ColorPicker
         }
         #endregion
 
-        #region RedString
-        private string redString;
-
-        partial void OnRedStringChanging(ref string value);
-        partial void OnRedStringChanged();
-
-        public string RedString
-        {
-            get
-            {
-                return this.redString;
-            }
-
-            set
-            {
-                if (this.redString != value)
-                {
-                    this.OnRedStringChanging(ref value);
-                    this.SetProperty<string>(ref this.redString, value);
-                    this.OnRedStringChanged();
-                }
-            }
-        }
-        #endregion
-
         #region Green
         private int green;
 
@@ -113,33 +89,6 @@ namespace GraphicsProject.Classes.ColorPicker
         }
         #endregion
 
-        #region GreenString
-
-        private string greenString;
-
-        partial void OnGreenStringChanging(ref string value);
-
-        partial void OnGreenStringChanged();
-
-        public string GreenString
-        {
-            get
-            {
-                return this.greenString;
-            }
-
-            set
-            {
-                if (this.greenString != value)
-                {
-                    this.OnGreenStringChanging(ref value);
-                    this.SetProperty<string>(ref this.greenString, value);
-                    this.OnGreenStringChanged();
-                }
-            }
-        }
-        #endregion
-
         #region Blue
         private int blue;
 
@@ -161,87 +110,6 @@ namespace GraphicsProject.Classes.ColorPicker
                     this.OnBlueChanging(ref value);
                     this.SetProperty<int>(ref this.blue, value);
                     this.OnBlueChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region BlueString
-
-        private string blueString;
-        partial void OnBlueStringChanging(ref string value);
-
-        partial void OnBlueStringChanged();
-
-        public string BlueString
-        {
-            get
-            {
-                return this.blueString;
-            }
-
-            set
-            {
-                if (this.blueString != value)
-                {
-                    this.OnBlueStringChanging(ref value);
-                    this.SetProperty<string>(ref this.blueString, value);
-                    this.OnBlueStringChanged();
-                }
-            }
-        }
-        #endregion
-
-        #region Alpha
-
-        private int alpha;
-
-        partial void OnAlphaChanging(ref int value);
-
-        partial void OnAlphaChanged();
-
-        public int Alpha
-        {
-            get
-            {
-                return this.alpha;
-            }
-
-            set
-            {
-                if (this.alpha != value)
-                {
-                    this.OnAlphaChanging(ref value);
-                    this.SetProperty<int>(ref this.alpha, value);
-                    this.OnAlphaChanged();
-                }
-            }
-        }
-
-        #endregion 
-
-        #region AlphaString
-
-        private string alphaString;
-
-        partial void OnAlphaStringChanging(ref string value);
-
-        partial void OnAlphaStringChanged();
-
-        public string AlphaString
-        {
-            get
-            {
-                return this.alphaString;
-            }
-
-            set
-            {
-                if (this.alphaString != value)
-                {
-                    this.OnAlphaStringChanging(ref value);
-                    this.SetProperty<string>(ref this.alphaString, value);
-                    this.OnAlphaStringChanged();
                 }
             }
         }
@@ -275,33 +143,6 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #endregion
 
-        #region CyanString
-
-        private string cyanString;
-
-        partial void OnCyanStringChanging(ref string value);
-
-        partial void OnCyanStringChanged();
-
-        public string CyanString
-        {
-            get
-            {
-                return this.cyanString;
-            }
-
-            set
-            {
-                if (this.cyanString != value)
-                {
-                    this.OnCyanStringChanging(ref value);
-                    this.SetProperty<string>(ref this.cyanString, value);
-                    this.OnCyanStringChanged();
-                }
-            }
-        }
-        #endregion
-
         #region Magenta
 
         private int magenta;
@@ -328,33 +169,6 @@ namespace GraphicsProject.Classes.ColorPicker
             }
         }
 
-        #endregion
-
-        #region MagentaString
-
-        private string magentaString;
-
-        partial void OnMagentaStringChanging(ref string value);
-
-        partial void OnMagentaStringChanged();
-
-        public string MagentaString
-        {
-            get
-            {
-                return this.magentaString;
-            }
-
-            set
-            {
-                if (this.magentaString != value)
-                {
-                    this.OnMagentaStringChanging(ref value);
-                    this.SetProperty<string>(ref this.magentaString, value);
-                    this.OnMagentaStringChanged();
-                }
-            }
-        }
         #endregion
 
         #region Yellow
@@ -385,33 +199,6 @@ namespace GraphicsProject.Classes.ColorPicker
 
         #endregion
 
-        #region YellowString
-
-        private string yellowString;
-
-        partial void OnYellowStringChanging(ref string value);
-
-        partial void OnYellowStringChanged();
-
-        public string YellowString
-        {
-            get
-            {
-                return this.yellowString;
-            }
-
-            set
-            {
-                if (this.yellowString != value)
-                {
-                    this.OnYellowStringChanging(ref value);
-                    this.SetProperty<string>(ref this.yellowString, value);
-                    this.OnYellowStringChanged();
-                }
-            }
-        }
-        #endregion
-
         #region Black
 
         private int black;
@@ -438,33 +225,6 @@ namespace GraphicsProject.Classes.ColorPicker
             }
         }
 
-        #endregion
-
-        #region BlackString
-
-        private string blackString;
-
-        partial void OnBlackStringChanging(ref string value);
-
-        partial void OnBlackStringChanged();
-
-        public string BlackString
-        {
-            get
-            {
-                return this.blackString;
-            }
-
-            set
-            {
-                if (this.blackString != value)
-                {
-                    this.OnBlackStringChanging(ref value);
-                    this.SetProperty<string>(ref this.blackString, value);
-                    this.OnBlackStringChanged();
-                }
-            }
-        }
         #endregion
 
         #region PickPointX

@@ -27,14 +27,9 @@ namespace GraphicsProject.Classes.ColorPicker
         private void UpdateColor(Color color)
         {
             this.color = $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
-            alpha = color.A;
-            alphaString = alpha.ToString();
             red = color.R;
-            redString = red.ToString();
             green = color.G;
-            greenString = green.ToString();
             blue = color.B;
-            blueString = blue.ToString();
 
             redStartColor = $"#{0xff:X2}{0:X2}{color.G:X2}{color.B:X2}";
             redEndColor = $"#{0xff:X2}{0xff:X2}{color.G:X2}{color.B:X2}";
@@ -205,39 +200,6 @@ namespace GraphicsProject.Classes.ColorPicker
             UpdatePickPoint();
         }
 
-        partial void OnAlphaStringChanged()
-        {
-            if (int.TryParse(alphaString, out var parsed))
-            {
-                Alpha = parsed;
-            }
-            else
-            {
-                AlphaString = alpha.ToString();
-            }
-        }
-
-        partial void OnAlphaChanged()
-        {
-            var updated = (Color)Converter.Convert(color, typeof(Color), null, null);
-            updated.A = (byte)Math.Max(0, alpha);
-            updated.A = Math.Min((byte)0xff, updated.A);
-            UpdateColor(updated);
-            UpdatePickPoint();
-        }
-
-        partial void OnRedStringChanged()
-        {
-            if (int.TryParse(redString, out var parsed))
-            {
-                Red = parsed;
-            }
-            else
-            {
-                RedString = red.ToString();
-            }
-        }
-
         partial void OnRedChanged()
         {
             var updated = (Color)Converter.Convert(color, typeof(Color), null, null);
@@ -247,18 +209,6 @@ namespace GraphicsProject.Classes.ColorPicker
             UpdatePickPoint();
         }
 
-        partial void OnGreenStringChanged()
-        {
-            if (int.TryParse(greenString, out var parsed))
-            {
-                Green = parsed;
-            }
-            else
-            {
-                GreenString = green.ToString();
-            }
-        }
-
         partial void OnGreenChanged()
         {
             var updated = (Color)Converter.Convert(color, typeof(Color), null, null);
@@ -266,18 +216,6 @@ namespace GraphicsProject.Classes.ColorPicker
             updated.G = Math.Min((byte)0xff, updated.G);
             UpdateColor(updated);
             UpdatePickPoint();
-        }
-
-        partial void OnBlueStringChanged()
-        {
-            if (int.TryParse(blueString, out var parsed))
-            {
-                Blue = parsed;
-            }
-            else
-            {
-                BlueString = blue.ToString();
-            }
         }
 
         partial void OnBlueChanged()

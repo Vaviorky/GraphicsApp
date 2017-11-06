@@ -36,6 +36,7 @@ namespace GraphicsProject.Views
             InitializeComponent();
             _imageManager = new ImageManager(DrawingCanvas);
             InitializeShapeManager();
+            DataContext = ViewModel;
         }
 
         #region Shapes
@@ -412,5 +413,9 @@ namespace GraphicsProject.Views
 
         #endregion
 
+        private void ColorPicker_OnRedTextChanged(object sender, TextChangedEventArgs e)
+        {
+            //Debug.WriteLine("Ontextchanged");
+        }
     }
 }

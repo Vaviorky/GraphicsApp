@@ -253,7 +253,8 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="R:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.RedString, Mode=OneWay, FallbackValue=255}"
+                                 TextChanged="ColorPicker_OnRedTextChanged"
+                                 Text="{Binding Red, Mode=TwoWay, FallbackValue=255, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -264,7 +265,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="G:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.GreenString, Mode=OneWay, FallbackValue=0}"
+                                 Text="{Binding Green, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -275,7 +276,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="B:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.BlueString, Mode=OneWay, FallbackValue=0}"
+                                 Text="{Binding Blue, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -295,7 +296,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="C:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.CyanString, Mode=OneWay, FallbackValue=255}"
+                                 Text="{Binding Cyan, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -306,7 +307,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="M:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.MagentaString, Mode=OneWay, FallbackValue=255}"
+                                 Text="{Binding Magenta, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -317,7 +318,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Y:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.YellowString, Mode=OneWay, FallbackValue=255}"
+                                 Text="{Binding Yellow, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
@@ -328,7 +329,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="K:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 Text="{x:Bind ViewModel.BlackString, Mode=OneWay, FallbackValue=255}"
+                                 Text="{Binding Black, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
                     </Grid>
