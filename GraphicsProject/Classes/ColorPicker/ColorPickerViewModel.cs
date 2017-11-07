@@ -33,10 +33,17 @@ namespace GraphicsProject.Classes.ColorPicker
 
             if (updateCmyk)
             {
-                black = Math.Min(1 - red / 256f, Math.Min(1 - green / 256f, 1 - blue / 256f));
-                cyan = (1 - red / 256f - black) / (1 - black);
-                magenta = (1 - green / 256f - black) / (1 - black);
-                yellow = (1 - blue / 256f - black) / (1 - black);
+                black = Math.Min(1 - red / 255f, Math.Min(1 - green / 255f, 1 - blue / 255f));
+                cyan = (1 - red / 255f - black) / (1 - black);
+                magenta = (1 - green / 255f - black) / (1 - black);
+                yellow = (1 - blue / 255f - black) / (1 - black);
+
+                if (black == 1)
+                {
+                    cyan = 0;
+                    magenta = 0;
+                    yellow = 0;
+                }
             }
 
             var hsv = ToHsv(color);
@@ -229,11 +236,12 @@ namespace GraphicsProject.Classes.ColorPicker
 
         private void UpdateCmyk()
         {
-            var tempRed = 1 - Math.Min(1, cyan * (1 - black) + black) * 256;
-            var tempGreen = 1 - Math.Min(1, magenta * (1 - black) + black) * 256;
-            var tempBlue = 1 - Math.Min(1, yellow * (1 - black) + black) * 256;
+            var tempRed = (1 - Math.Min(1, cyan * (1 - black) + black)) * 255;
+            var tempGreen = (1 - Math.Min(1, magenta * (1 - black) + black)) * 255;
+            var tempBlue = (1 - Math.Min(1, yellow * (1 - black) + black)) * 255;
             var updated = new Color
             {
+                A = 255,
                 R = (byte)tempRed,
                 G = (byte)tempGreen,
                 B = (byte)tempBlue
