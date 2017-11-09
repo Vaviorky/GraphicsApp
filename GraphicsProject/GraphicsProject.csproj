@@ -100,12 +100,14 @@
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.generated.cs" />
     <Compile Include="Classes\ImageManagement\FastSplit.cs" />
     <Compile Include="Classes\ImageManagement\ImageManager.cs" />
+    <Compile Include="Classes\ImgTransformation\ImageTransformation.cs" />
     <Compile Include="Classes\Main\AppManager.cs" />
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
     <Compile Include="Classes\Shapes\ShapeDrawer.cs" />
     <Compile Include="Classes\Shapes\ShapeManager.cs" />
     <Compile Include="Classes\Shapes\ShapeResizer.cs" />
     <Compile Include="Classes\Shapes\ShapePointer.cs" />
+    <Compile Include="Classes\WriteableBitmapExtensions\WbExtensions.cs" />
     <Compile Include="Enums\ImageLoadError.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />

@@ -25,7 +25,7 @@ namespace GraphicsProject.Classes.ImageManagement
         private readonly Canvas _canvas;
         private string _p3Line = "";
 
-        private WriteableBitmap _writeableBitmap;
+        public WriteableBitmap WriteableBitmap { get; set; }
 
         public ImageManager(Canvas canvas)
         {
@@ -66,7 +66,7 @@ namespace GraphicsProject.Classes.ImageManagement
             picker.FileTypeChoices.Add("Obraz JPEG", new[] { ".jpg" });
             var file = await picker.PickSaveFileAsync();
 
-            if (file == null || _writeableBitmap == null) return;
+            if (file == null || WriteableBitmap == null) return;
 
             using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
@@ -77,11 +77,11 @@ namespace GraphicsProject.Classes.ImageManagement
 
                 var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream, propertySet);
                 encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
-                Stream pixelStream = _writeableBitmap.PixelBuffer.AsStream();
+                Stream pixelStream = WriteableBitmap.PixelBuffer.AsStream();
                 byte[] pixels = new byte[pixelStream.Length];
                 await pixelStream.ReadAsync(pixels, 0, pixels.Length);
                 encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
-                    (uint)_writeableBitmap.PixelWidth, (uint)_writeableBitmap.PixelHeight, 96, 96, pixels);
+                    (uint)WriteableBitmap.PixelWidth, (uint)WriteableBitmap.PixelHeight, 96, 96, pixels);
 
                 await encoder.FlushAsync();
             }
@@ -91,15 +91,11 @@ namespace GraphicsProject.Classes.ImageManagement
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
-                var decoder = await BitmapDecoder.CreateAsync(stream);
-                var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                WriteableBitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                WriteableBitmap.SetSource(stream);
 
-                var displayableImage = SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
-
-                var sbs = new SoftwareBitmapSource();
-                await sbs.SetBitmapAsync(displayableImage);
-
-                var source = new ImageBrush { ImageSource = sbs };
+                var source = new ImageBrush { ImageSource = WriteableBitmap };
 
                 _canvas.Background = source;
             }
@@ -406,8 +402,8 @@ namespace GraphicsProject.Classes.ImageManagement
 
         private async Task UpdateCanvas(byte[] data, int width, int height)
         {
-            _writeableBitmap = new WriteableBitmap(width, height);
-            using (Stream bitmapStream = _writeableBitmap.PixelBuffer.AsStream())
+            WriteableBitmap = new WriteableBitmap(width, height);
+            using (Stream bitmapStream = WriteableBitmap.PixelBuffer.AsStream())
             {
                 await bitmapStream.WriteAsync(data, 0, data.Length);
             }
@@ -415,7 +411,7 @@ namespace GraphicsProject.Classes.ImageManagement
             var actualImage = new ImageBrush
             {
                 Stretch = Stretch.UniformToFill,
-                ImageSource = _writeableBitmap
+                ImageSource = WriteableBitmap
             };
 
             _canvas.Background = actualImage;

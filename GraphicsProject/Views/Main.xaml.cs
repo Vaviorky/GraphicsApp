@@ -7,23 +7,28 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
-using GraphicsProject.Classes.Main;
+using GraphicsProject.Classes.ImgTransformation;
 using GraphicsProject.Classes.Shapes;
+using GraphicsProject.Classes.WriteableBitmapExtensions;
 using GraphicsProject.Enums;
 
 namespace GraphicsProject.Views
 {
     public sealed partial class Main : Page
     {
+        public ColorPickerViewModel ViewModel { get; } = new ColorPickerViewModel();
+
+        private WriteableBitmap _writeableBitmap;
+
         private readonly ImageManager _imageManager;
+        private ShapeManager _shapeManager;
+        private readonly ImageTransformation _imgTransformation;
 
         private ShapeType _shapeType;
-        private ShapeManager _shapeManager;
-
-        public ColorPickerViewModel ViewModel { get; set; } = new ColorPickerViewModel();
 
         private Point _startingPoint;
         private Point _endingPoint;
@@ -35,6 +40,7 @@ namespace GraphicsProject.Views
         {
             InitializeComponent();
             _imageManager = new ImageManager(DrawingCanvas);
+            _imgTransformation = new ImageTransformation(DrawingCanvas);
             InitializeShapeManager();
             DataContext = ViewModel;
         }
@@ -413,9 +419,17 @@ namespace GraphicsProject.Views
 
         #endregion
 
-        private void ColorPicker_OnRedTextChanged(object sender, TextChangedEventArgs e)
+        #region ImageTransformation
+
+        private void GrayscaleItem_OnClick(object sender, RoutedEventArgs e)
         {
-            //Debug.WriteLine("Ontextchanged");
+            var bitmap1 = _imageManager.WriteableBitmap;
+
+            _imgTransformation.MakeGrayscale(_imageManager.WriteableBitmap);
+
+            var bitmap2 = _imageManager.WriteableBitmap;
         }
+
+        #endregion
     }
 }

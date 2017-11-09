@@ -19,6 +19,13 @@
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
+                <AppBarButton Icon="OpenFile" Label="Przetwarzanie">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Szarość" Click="GrayscaleItem_OnClick"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton Icon="Cancel" Label="Cancel"/>
             </StackPanel>
         </AppBar>
@@ -253,7 +260,6 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="R:"  HorizontalAlignment="Center" Grid.Row="0" />
                         <TextBox Grid.Row="1"
-                                 TextChanged="ColorPicker_OnRedTextChanged"
                                  Text="{Binding Red, Mode=TwoWay, FallbackValue=255, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
