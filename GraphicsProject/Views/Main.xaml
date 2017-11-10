@@ -22,6 +22,7 @@
                 <AppBarButton Icon="OpenFile" Label="Przetwarzanie">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
+                            <MenuFlyoutItem Text="Dodaj wartość" Click="AddValueItem_OnClick"/>
                             <MenuFlyoutItem Text="Szarość" Click="GrayscaleItem_OnClick"/>
                         </MenuFlyout>
                     </AppBarButton.Flyout>

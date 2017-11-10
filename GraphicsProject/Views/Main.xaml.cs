@@ -11,9 +11,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
-using GraphicsProject.Classes.ImgTransformation;
 using GraphicsProject.Classes.Shapes;
-using GraphicsProject.Classes.WriteableBitmapExtensions;
+using GraphicsProject.Classes;
 using GraphicsProject.Enums;
 
 namespace GraphicsProject.Views
@@ -26,7 +25,6 @@ namespace GraphicsProject.Views
 
         private readonly ImageManager _imageManager;
         private ShapeManager _shapeManager;
-        private readonly ImageTransformation _imgTransformation;
 
         private ShapeType _shapeType;
 
@@ -40,7 +38,6 @@ namespace GraphicsProject.Views
         {
             InitializeComponent();
             _imageManager = new ImageManager(DrawingCanvas);
-            _imgTransformation = new ImageTransformation(DrawingCanvas);
             InitializeShapeManager();
             DataContext = ViewModel;
         }
@@ -423,11 +420,17 @@ namespace GraphicsProject.Views
 
         private void GrayscaleItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var bitmap1 = _imageManager.WriteableBitmap;
+            DrawingCanvas.Background.MakeGrayscale();
+        }
 
-            _imgTransformation.MakeGrayscale(_imageManager.WriteableBitmap);
+        private void AddValueItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.AddPixelByValue(15);
+        }
 
-            var bitmap2 = _imageManager.WriteableBitmap;
+        private void SubstractValueItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.AddPixelByValue(-15);
         }
 
         #endregion
