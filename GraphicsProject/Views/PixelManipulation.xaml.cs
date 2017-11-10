@@ -13,19 +13,22 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+
 namespace GraphicsProject.Views
 {
-    public sealed partial class JPEGCompression : ContentDialog
+    public sealed partial class PixelManipulation : ContentDialog
     {
-        public double CompressionValue
+        public decimal PixelManipulationValue
         {
-            get => double.Parse(Compression.Text);
-            private set => CompressionValue = value;
+            get => decimal.Parse(PixelValue.Text);
+            private set => PixelManipulationValue = value;
         }
 
-        public JPEGCompression()
+        public PixelManipulation(string title)
         {
             this.InitializeComponent();
+            this.Title = title;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

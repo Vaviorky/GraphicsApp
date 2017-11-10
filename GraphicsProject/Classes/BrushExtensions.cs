@@ -99,7 +99,7 @@ public static class BrushExtensions
     {
         using (Stream stream = _bitmap.PixelBuffer.AsStream())
         {
-            await stream.WriteAsync(_pixels, 0, _length;
+            await stream.WriteAsync(_pixels, 0, _length);
         }
     }
 

@@ -423,14 +423,28 @@ namespace GraphicsProject.Views
             DrawingCanvas.Background.MakeGrayscale();
         }
 
-        private void AddValueItem_OnClick(object sender, RoutedEventArgs e)
+        private async void AddValueItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DrawingCanvas.Background.AddPixelByValue(15);
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do dodania");
+
+            var result = await manipulation.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.AddPixelByValue(manipulation.PixelManipulationValue);
+            }
         }
 
-        private void SubstractValueItem_OnClick(object sender, RoutedEventArgs e)
+        private async void SubstractValueItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DrawingCanvas.Background.AddPixelByValue(-15);
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do odjęcia");
+
+            var result = await manipulation.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.AddPixelByValue(-manipulation.PixelManipulationValue);
+            }
         }
 
         #endregion
