@@ -13,6 +13,7 @@ using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Shapes;
 using GraphicsProject.Classes;
+using GraphicsProject.Classes.Extensions;
 using GraphicsProject.Enums;
 
 namespace GraphicsProject.Views
@@ -418,12 +419,7 @@ namespace GraphicsProject.Views
 
         private void OriginalPicture_OnClick(object sender, RoutedEventArgs e)
         {
-            DrawingCanvas.Background = _imageManager.ActualImage;
-        }
-
-        private void GrayscaleItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            DrawingCanvas.Background.MakeGrayscale();
+           _imageManager.RevertToOriginalImage();
         }
 
         private async void AddValueItem_OnClick(object sender, RoutedEventArgs e)
@@ -476,6 +472,28 @@ namespace GraphicsProject.Views
                 }
 
                 DrawingCanvas.Background.MultiplyPixelByValue(1 / manipulation.PixelManipulationValue);
+            }
+        }
+
+        private void GrayscaleOneItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.MakeGrayscale_FirstWay();
+        }
+
+        private void GrayscaleTwoItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.MakeGrayscale_SecondWay();
+        }
+
+        private async void BrightnessItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do jasności:");
+
+            var result = await manipulation.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.AdjustBrightness((float)manipulation.PixelManipulationValue);
             }
         }
 

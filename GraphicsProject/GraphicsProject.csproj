@@ -98,10 +98,12 @@
     <Compile Include="Classes\ColorPicker\ColorConverter.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.generated.cs" />
+    <Compile Include="Classes\Extensions\BrushFilterExtensions.cs" />
+    <Compile Include="Classes\Extensions\BrushHelper.cs" />
     <Compile Include="Classes\ImageManagement\FastSplit.cs" />
     <Compile Include="Classes\ImageManagement\ImageManager.cs" />
     <Compile Include="Classes\Main\AppManager.cs" />
-    <Compile Include="Classes\BrushExtensions.cs" />
+    <Compile Include="Classes\Extensions\BrushExtensions.cs" />
     <Compile Include="Classes\Shapes\CurrentShape.cs" />
     <Compile Include="Classes\Shapes\ShapeDrawer.cs" />
     <Compile Include="Classes\Shapes\ShapeManager.cs" />

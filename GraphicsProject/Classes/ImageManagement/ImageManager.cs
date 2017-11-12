@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -20,31 +21,12 @@ namespace GraphicsProject.Classes.ImageManagement
 {
     internal class ImageManager
     {
-
         private ImageBrush _actualImage;
-        public ImageBrush ActualImage
-        {
-            get
-            {
-                using (Stream s = _bitmap.PixelBuffer.AsStream())
-                {
-                    var data = new byte[_bitmap.PixelWidth * _bitmap.PixelHeight * 4];
-                    s.Read(data, 0, data.Length);
-                    var x = 5;
-                }
-
-                _bitmap.Invalidate();
-                _actualImage.ImageSource = _bitmap;
-                return _actualImage;
-            }
-            private set => _actualImage = value;
-        }
-
         private readonly Canvas _canvas;
         private string _p3Line = "";
-
         private WriteableBitmap _bitmap;
 
+        private IStorageFile _file;
 
         public ImageManager(Canvas canvas)
         {
@@ -65,19 +47,24 @@ namespace GraphicsProject.Classes.ImageManagement
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".ppm");
 
-            var file = await picker.PickSingleFileAsync();
+            _file = await picker.PickSingleFileAsync();
 
-            if (file != null)
+            if (_file != null)
             {
-                var fileType = file.FileType;
-                if (fileType.Equals(".jpg") || fileType.Equals(".jpeg"))
-                {
-                    await LoadJpg(file);
-                }
-                else if (fileType.Equals(".ppm"))
-                {
-                    await LoadPpm(file);
-                }
+                CheckForImageToLoad(_file);
+            }
+        }
+
+        private async void CheckForImageToLoad(IStorageFile file)
+        {
+            var fileType = file.FileType;
+            if (fileType.Equals(".jpg") || fileType.Equals(".jpeg"))
+            {
+                await LoadJpg(file);
+            }
+            else if (fileType.Equals(".ppm"))
+            {
+                await LoadPpm(file);
             }
         }
 
@@ -118,11 +105,10 @@ namespace GraphicsProject.Classes.ImageManagement
             {
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                 _bitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                _bitmap.SetSource(stream);
+                await _bitmap.SetSourceAsync(stream);
 
-                ActualImage = new ImageBrush { ImageSource = _bitmap };
-
-                _canvas.Background = ActualImage;
+                _actualImage = new ImageBrush { ImageSource = _bitmap };
+                _canvas.Background = _actualImage;
             }
         }
 
@@ -448,16 +434,21 @@ namespace GraphicsProject.Classes.ImageManagement
                 await bitmapStream.WriteAsync(data, 0, data.Length);
             }
 
-            ActualImage = new ImageBrush
+            _actualImage = new ImageBrush
             {
                 Stretch = Stretch.UniformToFill,
                 ImageSource = _bitmap
             };
 
 
-            _canvas.Background = ActualImage;
+            _canvas.Background = _actualImage;
             _canvas.Width = width;
             _canvas.Height = height;
+        }
+
+        public void RevertToOriginalImage()
+        {
+            CheckForImageToLoad(_file);
         }
 
         private async void ShowErrorMessage(ImageLoadError error, Exception e = null)

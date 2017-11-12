@@ -32,8 +32,16 @@
                         <MenuFlyoutItem Text="Mnożenie" Click="MultiplyValueItem_OnClick"/>
                         <MenuFlyoutItem Text="Dzielenie" Click="DivideValueItem_OnClick"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Jasność" Click="GrayscaleItem_OnClick"/>
-                        <MenuFlyoutItem Text="Szarość" Click="GrayscaleItem_OnClick"/>
+                        <MenuFlyoutItem Text="Szarość 1" Click="GrayscaleOneItem_OnClick"/>
+                        <MenuFlyoutItem Text="Szarość 2" Click="GrayscaleTwoItem_OnClick"/>
+                        <MenuFlyoutItem Text="Jasność" Click="BrightnessItem_OnClick"/>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Uśredniający"/>
+                        <MenuFlyoutItem Text="Medianowy"/>
+                        <MenuFlyoutItem Text="Wykr. krawędzi"/>
+                        <MenuFlyoutItem Text="Wyostrzający"/>
+                        <MenuFlyoutItem Text="Rozmycie Gauss."/>
+                        <MenuFlyoutItem Text="Splot maski"/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
