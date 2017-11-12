@@ -6,136 +6,78 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.TopAppBar>
-        <AppBar>
-            <StackPanel Orientation="Horizontal">
-                <AppBarButton Icon="OpenFile" Label="Plik">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="Otwórz" Click="OpenImgButton_OnClick"/>
-                            <MenuFlyoutItem Text="Zapisz" Click="SaveImgButton_OnClick"/>
-                            <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Zamknij" Click="ExitAppButton_OnClick" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton Icon="OpenFile" Label="Przetwarzanie">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="Dodaj wartość" Click="AddValueItem_OnClick"/>
-                            <MenuFlyoutItem Text="Szarość" Click="GrayscaleItem_OnClick"/>
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton Icon="Cancel" Label="Cancel"/>
-            </StackPanel>
-        </AppBar>
-    </Page.TopAppBar>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    <Grid Background="Gray">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="330"/>
-        </Grid.ColumnDefinitions>
-        <ScrollViewer Grid.Column="0" MinZoomFactor="0.2" MaxZoomFactor="30" ZoomMode="Enabled">
-            <Canvas Name="DrawingCanvas"
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="White">
+            <AppBarButton Icon="OpenFile" Label="Plik">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Otwórz" Click="OpenImgButton_OnClick"/>
+                        <MenuFlyoutItem Text="Zapisz" Click="SaveImgButton_OnClick"/>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Zamknij" Click="ExitAppButton_OnClick" />
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Icon="Camera" Label="Oryginał" Click="OriginalPicture_OnClick"/>
+            <AppBarButton Icon="Street" Label="Przetwarzanie" Width="100">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Dodawanie" Click="AddValueItem_OnClick"/>
+                        <MenuFlyoutItem Text="Odejmowanie" Click="SubstractValueItem_OnClick"/>
+                        <MenuFlyoutItem Text="Mnożenie" Click="MultiplyValueItem_OnClick"/>
+                        <MenuFlyoutItem Text="Dzielenie" Click="DivideValueItem_OnClick"/>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Jasność" Click="GrayscaleItem_OnClick"/>
+                        <MenuFlyoutItem Text="Szarość" Click="GrayscaleItem_OnClick"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Background="Gray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="330"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.Column="0" MinZoomFactor="0.2" MaxZoomFactor="30" ZoomMode="Enabled">
+                <Canvas Name="DrawingCanvas"
                     Background="White"
                     PointerPressed="Canvas_OnPointerPressed"
                     PointerReleased="Canvas_PointerReleased"/>
-        </ScrollViewer>
-        <Grid Grid.Column="1" Background="DimGray">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="7*"/>
-            </Grid.RowDefinitions>
-            <Grid Name="ShapeButtonsGrid" Grid.Row="0" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Name="ButtonLineSelect" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnLineSelect" Background="LawnGreen">
-                    <Image Source="../Assets/line.png"/>
-                </Button>
-                <Button Name="ButtonRectangleSelect" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnRectangleSelect" Background="ForestGreen">
-                    <Image Source="../Assets/rectangle.png"/>
-                </Button>
-                <Button Name="ButtonEllipseSelect" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnEllipseSelect" Background="ForestGreen">
-                    <Image Source="../Assets/ellipse.png"/>
-                </Button>
-            </Grid>
-            <Grid Name="ShapePropertiesGrid" Grid.Row="1">
+            </ScrollViewer>
+            <Grid Grid.Column="1" Background="DimGray">
                 <Grid.RowDefinitions>
-                    <RowDefinition  Height="*"/>
-                    <RowDefinition  Height="2*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="7*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+                <Grid Name="ShapeButtonsGrid" Grid.Row="0" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X:"/>
-                        <TextBox Name="XPosition" Grid.Column="1" TextChanged="XPosition_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y:"/>
-                        <TextBox Name="YPosition" Grid.Column="1" TextChanged="YPosition_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                    </Grid>
+                    <Button Name="ButtonLineSelect" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnLineSelect" Background="LawnGreen">
+                        <Image Source="../Assets/line.png"/>
+                    </Button>
+                    <Button Name="ButtonRectangleSelect" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnRectangleSelect" Background="ForestGreen">
+                        <Image Source="../Assets/rectangle.png"/>
+                    </Button>
+                    <Button Name="ButtonEllipseSelect" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Click="Button_OnEllipseSelect" Background="ForestGreen">
+                        <Image Source="../Assets/ellipse.png"/>
+                    </Button>
                 </Grid>
-                <Grid Row="1">
-                    <Grid Name="LineProperties" Visibility="Visible">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X1:"/>
-                            <TextBox Name="LineX1" Grid.Column="1" TextChanged="Line_X1_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y1:"/>
-                            <TextBox Name="LineY1" Grid.Column="1" TextChanged="Line_Y1_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                        </Grid>
-                        <Grid Grid.Row="0" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X2:"/>
-                            <TextBox Name="LineX2" Grid.Column="1" TextChanged="Line_X2_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y2:"/>
-                            <TextBox Name="LineY2" Grid.Column="1" TextChanged="Line_Y2_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
-                        </Grid>
-                    </Grid>
-                    <Grid Name="RectangleProperties" Visibility="Collapsed">
+                <Grid Name="ShapePropertiesGrid" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition  Height="*"/>
+                        <RowDefinition  Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -145,199 +87,267 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Szerokość:"/>
-                            <TextBox Name="RectangleWidth" Grid.Column="1" TextChanged="Rectangle_Width_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X:"/>
+                            <TextBox Name="XPosition" Grid.Column="1" TextChanged="XPosition_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
                         </Grid>
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Wysokość:"/>
-                            <TextBox Name="RectangleHeight" Grid.Column="1" TextChanged="Rectangle_Height_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y:"/>
+                            <TextBox Name="YPosition" Grid.Column="1" TextChanged="YPosition_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
                         </Grid>
                     </Grid>
-                    <Grid Name="CircleProperties" Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Promień:"/>
-                        <TextBox Name="CircleRadius"  Grid.Column="1" TextChanged="Circle_Radius_OnTextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"/>
+                    <Grid Row="1">
+                        <Grid Name="LineProperties" Visibility="Visible">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X1:"/>
+                                <TextBox Name="LineX1" Grid.Column="1" TextChanged="Line_X1_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y1:"/>
+                                <TextBox Name="LineY1" Grid.Column="1" TextChanged="Line_Y1_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
+                            </Grid>
+                            <Grid Grid.Row="0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="X2:"/>
+                                <TextBox Name="LineX2" Grid.Column="1" TextChanged="Line_X2_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Y2:"/>
+                                <TextBox Name="LineY2" Grid.Column="1" TextChanged="Line_Y2_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Name="RectangleProperties" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Szerokość:"/>
+                                <TextBox Name="RectangleWidth" Grid.Column="1" TextChanged="Rectangle_Width_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Wysokość:"/>
+                                <TextBox Name="RectangleHeight" Grid.Column="1" TextChanged="Rectangle_Height_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Name="CircleProperties" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Promień:"/>
+                            <TextBox Name="CircleRadius"  Grid.Column="1" TextChanged="Circle_Radius_OnTextChanged" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"/>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid Name="ColorPickerGrid" Row="2" VerticalAlignment="Top" Margin="0, 20, 0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <Grid Name="ColorPickerMainContent" Grid.Row="0" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="25"/>
-                        <ColumnDefinition Width="10"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Name="ColorPickerGrid" Row="2" VerticalAlignment="Top" Margin="0, 20, 0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
+                    <Grid Name="ColorPickerMainContent" Grid.Row="0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="10"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="10"/>
+                        </Grid.RowDefinitions>
 
-                    <Canvas Name="CurrentColor" Background="{x:Bind ViewModel.Color, Mode=OneWay, FallbackValue=#FFFF0000}" Grid.Row="0"/>
+                        <Canvas Name="CurrentColor" Background="{x:Bind ViewModel.Color, Mode=OneWay, FallbackValue=#FFFF0000}" Grid.Row="0"/>
 
-                    <Grid Grid.Column="0" Grid.Row="2" Width="250" Height="250"
+                        <Grid Grid.Column="0" Grid.Row="2" Width="250" Height="250"
                           Background="{x:Bind ViewModel.HueColor, Mode=OneWay, FallbackValue=#FFFF0000}">
-                        <Rectangle>
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,0"
+                            <Rectangle>
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush StartPoint="0,0"
                                                      EndPoint="1,0">
-                                    <GradientStop Offset="0" Color="White"/>
-                                    <GradientStop Offset="1" Color="#00FFFFFF"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle>
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,0"
+                                        <GradientStop Offset="0" Color="White"/>
+                                        <GradientStop Offset="1" Color="#00FFFFFF"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle>
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush StartPoint="0,0"
                                                      EndPoint="0,1">
-                                    <GradientStop Offset="0" Color="#00000000"/>
-                                    <GradientStop Offset="1" Color="Black"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Canvas x:Name="PickerCanvas"
+                                        <GradientStop Offset="0" Color="#00000000"/>
+                                        <GradientStop Offset="1" Color="Black"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Canvas x:Name="PickerCanvas"
                                 PointerPressed="OnPickerPressed"
                                 Background="Transparent">
-                            <Grid Margin="-7,-7,0,0"
+                                <Grid Margin="-7,-7,0,0"
                                   Canvas.Left="{x:Bind ViewModel.PickPointX, Mode=OneWay}"
                                   Canvas.Top="{x:Bind ViewModel.PickPointY, Mode=OneWay}">
-                                <Ellipse Stroke="White"
+                                    <Ellipse Stroke="White"
                                          StrokeThickness="3"
                                          Width="14"
                                          Height="14"
                                          UseLayoutRounding="False"/>
-                                <Ellipse Stroke="Black"
+                                    <Ellipse Stroke="Black"
                                          StrokeThickness="1"
                                          Width="12"
                                          Height="12"
                                          UseLayoutRounding="False"/>
-                            </Grid>
-                        </Canvas>
-                    </Grid>
-                    <Rectangle x:Name="ColorSpectrum" Grid.Column="2" Grid.Row="2" PointerPressed="OnHuePressed">
-                        <Rectangle.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0" Color="#FFFF0000"/>
-                                <GradientStop Offset="0.2" Color="#FFFFFF00"/>
-                                <GradientStop Offset="0.4" Color="#FF00FF00"/>
-                                <GradientStop Offset="0.6" Color="#FF0000FF"/>
-                                <GradientStop Offset="0.8" Color="#FFFF00FF"/>
-                                <GradientStop Offset="1" Color="#FFFF0000"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Canvas Grid.Column="3"
+                                </Grid>
+                            </Canvas>
+                        </Grid>
+                        <Rectangle x:Name="ColorSpectrum" Grid.Column="2" Grid.Row="2" PointerPressed="OnHuePressed">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="#FFFF0000"/>
+                                    <GradientStop Offset="0.2" Color="#FFFFFF00"/>
+                                    <GradientStop Offset="0.4" Color="#FF00FF00"/>
+                                    <GradientStop Offset="0.6" Color="#FF0000FF"/>
+                                    <GradientStop Offset="0.8" Color="#FFFF00FF"/>
+                                    <GradientStop Offset="1" Color="#FFFF0000"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Canvas Grid.Column="3"
                             Grid.Row="2">
-                        <Polygon Canvas.Top="{x:Bind ViewModel.ColorSpectrumPoint, Mode=OneWay}"
+                            <Polygon Canvas.Top="{x:Bind ViewModel.ColorSpectrumPoint, Mode=OneWay}"
                                  Points="8,-3 0,0 8,3"
                                  Fill="White"/>
-                    </Canvas>
+                        </Canvas>
 
-                </Grid>
-                <Grid Name="RgbTextFields" Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Name="RColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="R:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                    </Grid>
+                    <Grid Name="RgbTextFields" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Name="RColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="R:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Red, Mode=TwoWay, FallbackValue=255, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
-                    </Grid>
-                    <Grid Grid.Column="1" Name="GColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="G:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        </Grid>
+                        <Grid Grid.Column="1" Name="GColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="G:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Green, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
-                    </Grid>
-                    <Grid Grid.Column="2" Name="BColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="B:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        </Grid>
+                        <Grid Grid.Column="2" Name="BColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="B:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Blue, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"
                                  MaxLength="3"/>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid Name="CmykTextFields" Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Name="CmykTextFields" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0" Name="CColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="C:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        <Grid Grid.Column="0" Name="CColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="C:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Cyan, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"/>
-                    </Grid>
-                    <Grid Grid.Column="1" Name="MColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="M:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        </Grid>
+                        <Grid Grid.Column="1" Name="MColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="M:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Magenta, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"/>
-                    </Grid>
-                    <Grid Grid.Column="2" Name="YColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="Y:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        </Grid>
+                        <Grid Grid.Column="2" Name="YColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Y:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Yellow, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"/>
-                    </Grid>
-                    <Grid Grid.Column="3" Name="KColorGrid" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="K:"  HorizontalAlignment="Center" Grid.Row="0" />
-                        <TextBox Grid.Row="1"
+                        </Grid>
+                        <Grid Grid.Column="3" Name="KColorGrid" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="K:"  HorizontalAlignment="Center" Grid.Row="0" />
+                            <TextBox Grid.Row="1"
                                  Text="{Binding Black, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"
                                  InputScope="Number"/>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
         </Grid>
     </Grid>
+
+
 </Page>

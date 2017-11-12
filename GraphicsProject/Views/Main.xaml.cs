@@ -21,8 +21,6 @@ namespace GraphicsProject.Views
     {
         public ColorPickerViewModel ViewModel { get; } = new ColorPickerViewModel();
 
-        private WriteableBitmap _writeableBitmap;
-
         private readonly ImageManager _imageManager;
         private ShapeManager _shapeManager;
 
@@ -418,6 +416,11 @@ namespace GraphicsProject.Views
 
         #region ImageTransformation
 
+        private void OriginalPicture_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background = _imageManager.ActualImage;
+        }
+
         private void GrayscaleItem_OnClick(object sender, RoutedEventArgs e)
         {
             DrawingCanvas.Background.MakeGrayscale();
@@ -425,7 +428,7 @@ namespace GraphicsProject.Views
 
         private async void AddValueItem_OnClick(object sender, RoutedEventArgs e)
         {
-            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do dodania");
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do dodania:");
 
             var result = await manipulation.ShowAsync();
 
@@ -437,7 +440,7 @@ namespace GraphicsProject.Views
 
         private async void SubstractValueItem_OnClick(object sender, RoutedEventArgs e)
         {
-            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do odjęcia");
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do odjęcia:");
 
             var result = await manipulation.ShowAsync();
 
@@ -447,6 +450,36 @@ namespace GraphicsProject.Views
             }
         }
 
+        private async void MultiplyValueItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do pomnożenia:");
+
+            var result = await manipulation.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.MultiplyPixelByValue(manipulation.PixelManipulationValue);
+            }
+        }
+
+        private async void DivideValueItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            PixelManipulation manipulation = new PixelManipulation("Podaj wartość do podzielenia:");
+
+            var result = await manipulation.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                if (manipulation.PixelManipulationValue == 0)
+                {
+                    return;
+                }
+
+                DrawingCanvas.Background.MultiplyPixelByValue(1 / manipulation.PixelManipulationValue);
+            }
+        }
+
         #endregion
+
     }
 }
