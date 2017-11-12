@@ -23,7 +23,7 @@ namespace GraphicsProject.Classes.Extensions
             _brush = (ImageBrush)brush;
             var source = (BitmapSource)_brush.ImageSource;
             _bitmap = (WriteableBitmap)source;
-            Pixels = GetPixelData();
+            Pixels = _bitmap.PixelBuffer.ToArray();
             Length = Pixels.Length;
         }
 
@@ -32,16 +32,6 @@ namespace GraphicsProject.Classes.Extensions
             await PixelDataToWriteableBitmap();
             _bitmap.Invalidate();
             _brush.ImageSource = _bitmap;
-        }
-
-        private byte[] GetPixelData()
-        {
-            using (Stream stream = _bitmap.PixelBuffer.AsStream())
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                stream.CopyTo(memoryStream);
-                return memoryStream.ToArray();
-            }
         }
 
         private async Task PixelDataToWriteableBitmap()
