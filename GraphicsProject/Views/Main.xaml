@@ -36,12 +36,11 @@
                         <MenuFlyoutItem Text="Szarość 2" Click="GrayscaleTwoItem_OnClick"/>
                         <MenuFlyoutItem Text="Jasność" Click="BrightnessItem_OnClick"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Uśredniający"/>
-                        <MenuFlyoutItem Text="Medianowy"/>
-                        <MenuFlyoutItem Text="Wykr. krawędzi"/>
-                        <MenuFlyoutItem Text="Wyostrzający"/>
-                        <MenuFlyoutItem Text="Rozmycie Gauss."/>
-                        <MenuFlyoutItem Text="Splot maski"/>
+                        <MenuFlyoutItem Text="Uśredniający" Click="Mean_OnClick"/>
+                        <MenuFlyoutItem Text="Medianowy" Click="Median_OnClick"/>
+                        <MenuFlyoutItem Text="Wykr. krawędzi" Click="Sobel_OnClick"/>
+                        <MenuFlyoutItem Text="Wyostrzający" Click="Sharp_OnClick"/>
+                        <MenuFlyoutItem Text="Rozmycie Gauss." Click="Gauss_OnClick" />
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
@@ -52,7 +51,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="330"/>
             </Grid.ColumnDefinitions>
-            <ScrollViewer Grid.Column="0" MinZoomFactor="0.2" MaxZoomFactor="30" ZoomMode="Enabled">
+            
+            <ScrollViewer Grid.Column="0" MinZoomFactor="1" MaxZoomFactor="100" ZoomMode="Enabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible">
                 <Canvas Name="DrawingCanvas"
                     Background="White"
                     PointerPressed="Canvas_OnPointerPressed"

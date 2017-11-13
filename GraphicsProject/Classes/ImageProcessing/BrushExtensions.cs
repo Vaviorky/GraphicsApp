@@ -1,7 +1,12 @@
 ﻿using System;
 using Windows.UI.Xaml.Media;
 
-namespace GraphicsProject.Classes.Extensions
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+namespace GraphicsProject.Classes.ImageProcessing
 {
     public static class BrushExtensions
     {

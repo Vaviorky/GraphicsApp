@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace GraphicsProject.Classes.Extensions
+namespace GraphicsProject.Classes.ImageProcessing
 {
     internal class BrushHelper
     {
         public byte[] Pixels { get; private set; }
         public int Length { get; private set; }
+        public int Width => _bitmap.PixelWidth;
+        public int Height => _bitmap.PixelHeight;
 
         private ImageBrush _brush;
         private WriteableBitmap _bitmap;
@@ -29,6 +30,14 @@ namespace GraphicsProject.Classes.Extensions
 
         public async Task UpdateBrush()
         {
+            await PixelDataToWriteableBitmap();
+            _bitmap.Invalidate();
+            _brush.ImageSource = _bitmap;
+        }
+
+        public async Task UpdateBrush(byte[] pixels)
+        {
+            Pixels = pixels;
             await PixelDataToWriteableBitmap();
             _bitmap.Invalidate();
             _brush.ImageSource = _bitmap;

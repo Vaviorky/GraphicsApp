@@ -109,6 +109,8 @@ namespace GraphicsProject.Classes.ImageManagement
 
                 _actualImage = new ImageBrush { ImageSource = _bitmap };
                 _canvas.Background = _actualImage;
+                _canvas.Width = decoder.PixelWidth;
+                _canvas.Height = decoder.PixelHeight;
             }
         }
 
@@ -439,7 +441,6 @@ namespace GraphicsProject.Classes.ImageManagement
                 Stretch = Stretch.UniformToFill,
                 ImageSource = _bitmap
             };
-
 
             _canvas.Background = _actualImage;
             _canvas.Width = width;

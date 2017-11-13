@@ -13,7 +13,7 @@ using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Shapes;
 using GraphicsProject.Classes;
-using GraphicsProject.Classes.Extensions;
+using GraphicsProject.Classes.ImageProcessing;
 using GraphicsProject.Enums;
 
 namespace GraphicsProject.Views
@@ -497,7 +497,33 @@ namespace GraphicsProject.Views
             }
         }
 
-        #endregion
+        private void Mean_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.MeanFilter();
+        }
 
+        private void Median_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.MedianFilter();
+        }
+
+        private void Sharp_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.SharpFilter();
+        }
+
+        private void Sobel_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.SobelFilter();
+        }
+
+        private void Gauss_OnClick(object sender, RoutedEventArgs e)
+        {
+            DrawingCanvas.Background.GaussFilter();
+        }
+
+
+
+        #endregion
     }
 }
