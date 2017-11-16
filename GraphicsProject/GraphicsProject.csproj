@@ -98,6 +98,7 @@
     <Compile Include="Classes\ColorPicker\ColorConverter.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.generated.cs" />
+    <Compile Include="Classes\Histograms\Histogram.cs" />
     <Compile Include="Classes\ImageProcessing\BrushFilterExtensions.cs" />
     <Compile Include="Classes\ImageProcessing\BrushHelper.cs" />
     <Compile Include="Classes\ImageProcessing\Mask.cs" />
@@ -113,6 +114,9 @@
     <Compile Include="Enums\ImageLoadError.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />
+    <Compile Include="Views\HistogramWindow.xaml.cs">
+      <DependentUpon>HistogramWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\JPEGCompression.xaml.cs">
       <DependentUpon>JPEGCompression.xaml</DependentUpon>
     </Compile>
@@ -147,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\HistogramWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\JPEGCompression.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

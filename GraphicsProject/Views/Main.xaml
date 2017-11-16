@@ -44,6 +44,15 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <AppBarButton Icon="FourBars" Label="Histogramy">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Otwórz okno"/>
+                        <MenuFlyoutItem Text="Rozszerzenie"/>
+                        <MenuFlyoutItem Text="Wyrównanie"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
         </StackPanel>
 
         <Grid Grid.Row="1" Background="Gray">
@@ -51,7 +60,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="330"/>
             </Grid.ColumnDefinitions>
-            
+
             <ScrollViewer Grid.Column="0" MinZoomFactor="1" MaxZoomFactor="100" ZoomMode="Enabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible">
                 <Canvas Name="DrawingCanvas"
                     Background="White"

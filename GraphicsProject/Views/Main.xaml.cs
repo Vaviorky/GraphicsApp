@@ -419,7 +419,7 @@ namespace GraphicsProject.Views
 
         private void OriginalPicture_OnClick(object sender, RoutedEventArgs e)
         {
-           _imageManager.RevertToOriginalImage();
+            _imageManager.RevertToOriginalImage();
         }
 
         private async void AddValueItem_OnClick(object sender, RoutedEventArgs e)
@@ -523,6 +523,26 @@ namespace GraphicsProject.Views
         }
 
 
+
+        #endregion
+
+        #region
+
+        private async void ShowHistogram_OnClick(object sender, RoutedEventArgs e)
+        {
+            HistogramWindow histogramWindow = new HistogramWindow(DrawingCanvas.Background);
+            await histogramWindow.ShowAsync();
+        }
+
+        private void HistogramEqualisation_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void HistogramStretching_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }
