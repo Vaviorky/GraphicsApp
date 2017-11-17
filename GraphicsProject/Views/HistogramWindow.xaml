@@ -10,26 +10,33 @@
     Width="1300"
     Height="700">
 
-    <Grid>
+    <Grid Width="1300" Height="700">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="700" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="600"/>
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
             <ScrollViewer Grid.Column="0" MinZoomFactor="1" MaxZoomFactor="100" ZoomMode="Enabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible">
                 <Canvas Name="DrawingCanvas"
-                    Background="White"
-                    PointerPressed="Canvas_OnPointerPressed"
-                    PointerReleased="Canvas_PointerReleased"/>
+                    Background="White"/>
             </ScrollViewer>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            </Grid>
+            
         </Grid>
 
-        <Button HorizontalAlignment="Center" Grid.Row="1"/>
+        <Button HorizontalAlignment="Center" Content="OK" Click="OkButton_Click" Grid.Row="1"/>
     </Grid>
 </ContentDialog>

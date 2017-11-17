@@ -526,7 +526,7 @@ namespace GraphicsProject.Views
 
         #endregion
 
-        #region
+        #region Histograms
 
         private async void ShowHistogram_OnClick(object sender, RoutedEventArgs e)
         {

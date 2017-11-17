@@ -27,5 +27,10 @@ namespace GraphicsProject.Views
             this.InitializeComponent();
             
         }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
     }
 }

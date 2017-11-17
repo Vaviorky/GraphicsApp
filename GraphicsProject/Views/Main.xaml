@@ -47,7 +47,7 @@
             <AppBarButton Icon="FourBars" Label="Histogramy">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Otwórz okno"/>
+                        <MenuFlyoutItem Text="Otwórz okno" Click="ShowHistogram_OnClick"/>
                         <MenuFlyoutItem Text="Rozszerzenie"/>
                         <MenuFlyoutItem Text="Wyrównanie"/>
                     </MenuFlyout>
