@@ -98,9 +98,11 @@
     <Compile Include="Classes\ColorPicker\ColorConverter.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.generated.cs" />
+    <Compile Include="Classes\Histograms\BrushHistogramExtensions.cs" />
     <Compile Include="Classes\Histograms\Histogram.cs" />
+    <Compile Include="Classes\Histograms\HistogramHelper.cs" />
     <Compile Include="Classes\ImageProcessing\BrushFilterExtensions.cs" />
-    <Compile Include="Classes\ImageProcessing\BrushHelper.cs" />
+    <Compile Include="Classes\BrushHelper.cs" />
     <Compile Include="Classes\ImageProcessing\Mask.cs" />
     <Compile Include="Classes\ImageManagement\FastSplit.cs" />
     <Compile Include="Classes\ImageManagement\ImageManager.cs" />
@@ -136,6 +138,7 @@
   <ItemGroup>
     <Content Include="Assets\ellipse.png" />
     <Content Include="Assets\line.png" />
+    <Content Include="Assets\podzialka.png" />
     <Content Include="Assets\rectangle.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

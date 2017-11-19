@@ -18,14 +18,20 @@ namespace GraphicsProject.Views
 {
     public sealed partial class HistogramWindow : ContentDialog
     {
-        private Histogram histogram = new Histogram();
-        private Brush brush;
+        public PointCollection HistogramRed => HistogramHelper.ConvertToPointCollection(Histogram.HistogramR);
+        public PointCollection HistogramGreen => HistogramHelper.ConvertToPointCollection(Histogram.HistogramG);
+        public PointCollection HistogramBlue => HistogramHelper.ConvertToPointCollection(Histogram.HistogramB);
+        public PointCollection HistogramAv => HistogramHelper.ConvertToPointCollection(Histogram.HistogramAv);
 
-        public HistogramWindow(Brush brush)
+        public ImageBrush Image { get; }
+
+        public Histogram Histogram { get; }
+
+        public HistogramWindow(ImageBrush image)
         {
-            this.brush = brush;
+            Image = image;
             this.InitializeComponent();
-            
+            Histogram = new Histogram(Image);
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

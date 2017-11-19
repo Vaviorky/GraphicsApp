@@ -13,6 +13,7 @@ using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Shapes;
 using GraphicsProject.Classes;
+using GraphicsProject.Classes.Histograms;
 using GraphicsProject.Classes.ImageProcessing;
 using GraphicsProject.Enums;
 
@@ -530,13 +531,22 @@ namespace GraphicsProject.Views
 
         private async void ShowHistogram_OnClick(object sender, RoutedEventArgs e)
         {
-            HistogramWindow histogramWindow = new HistogramWindow(DrawingCanvas.Background);
+            var img = (ImageBrush) DrawingCanvas.Background;
+            img.Stretch = Stretch.None;
+
+            var histogramWindow = new HistogramWindow(img)
+            {
+                MinWidth = this.ActualWidth,
+                MaxWidth = this.ActualWidth,
+                MinHeight = this.ActualHeight,
+                MaxHeight = this.ActualHeight
+            };
             await histogramWindow.ShowAsync();
         }
 
         private void HistogramEqualisation_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            DrawingCanvas.Background.EqualizeHistogram();
         }
 
         private void HistogramStretching_OnClick(object sender, RoutedEventArgs e)

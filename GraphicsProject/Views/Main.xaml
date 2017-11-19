@@ -48,8 +48,8 @@
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Otwórz okno" Click="ShowHistogram_OnClick"/>
-                        <MenuFlyoutItem Text="Rozszerzenie"/>
-                        <MenuFlyoutItem Text="Wyrównanie"/>
+                        <MenuFlyoutItem Text="Rozszerzenie" Click="HistogramStretching_OnClick"/>
+                        <MenuFlyoutItem Text="Wyrównanie" Click="HistogramEqualisation_OnClick"/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
