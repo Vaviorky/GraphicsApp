@@ -116,6 +116,9 @@
     <Compile Include="Enums\ImageLoadError.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />
+    <Compile Include="Views\HistogramStretching.xaml.cs">
+      <DependentUpon>HistogramStretching.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HistogramWindow.xaml.cs">
       <DependentUpon>HistogramWindow.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\HistogramStretching.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HistogramWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
