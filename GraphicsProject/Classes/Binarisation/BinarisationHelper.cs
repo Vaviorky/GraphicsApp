@@ -53,5 +53,74 @@ namespace GraphicsProject.Classes.Binarisation
             }
             return lut;
         }
+
+        public static int GetOtsuThreshold(ImageBrush image)
+        {
+            var wb = (WriteableBitmap)image.ImageSource;
+            var data = wb.PixelBuffer.ToArray();
+            var pixels = GetPixelValues(data);
+
+            var bgWeight = new double[256];
+            var bgMean = new double[256];
+            var fgWeight = new double[256];
+            var fgMean = new double[256];
+
+            var max = wb.PixelWidth * wb.PixelHeight;
+            for (var i = 0; i < 256; i++)
+            {
+                bgWeight[i] = GetWeight(pixels, max, 0, i);
+                bgMean[i] = GetAverage(pixels, 0, i);
+
+                fgWeight[i] = GetWeight(pixels, max, i + 1, 256);
+                fgMean[i] = GetAverage(pixels, i + 1, 256);
+            }
+
+            double maximum = 0;
+            int position = 0;
+
+            for (int j = 0; j < 256; j++)
+            {
+                var result = bgWeight[j] * fgWeight[j] * (bgMean[j] - fgMean[j]) * (bgMean[j] - fgMean[j]);
+                if (result > maximum)
+                {
+                    maximum = result;
+                    position = j;
+                }
+            }
+            return position;
+        }
+
+        private static int[] GetPixelValues(byte[] data)
+        {
+            var tab = new int[256];
+            for (int i = 0; i < data.Length; i+=4)
+            {
+                var value = data[i + 2];
+                tab[value]++;
+            }
+            return tab;
+        }
+
+        private static double GetWeight(int[] pixelsValues, int maxPixels, int start, int end)
+        {
+            double suma = 0;
+            for (var i = start; i < end; i++)
+            {
+                suma += pixelsValues[i];
+            }
+            return suma / maxPixels;
+        }
+
+        private static double GetAverage(int[] pixelsValues, int start, int end)
+        {
+            double max = 0;
+            double suma = 0;
+            for (var i = start; i < end; i++)
+            {
+                suma += pixelsValues[i] * i;
+                max += pixelsValues[i];
+            }
+            return suma / max;
+        }
     }
 }

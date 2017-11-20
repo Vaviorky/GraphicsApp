@@ -600,6 +600,18 @@ namespace GraphicsProject.Views
             }
         }
 
+        private async void Otsu_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!DrawingCanvas.Background.IsGrayscaled())
+            {
+                var dialog = new MessageDialog("Obraz musi być czarno-biały!", "Błąd");
+                await dialog.ShowAsync();
+                return;
+            }
+
+            DrawingCanvas.Background.PerformOtsu();
+        }
+
         #endregion
 
     }

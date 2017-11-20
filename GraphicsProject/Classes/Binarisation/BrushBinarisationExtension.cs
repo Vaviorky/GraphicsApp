@@ -52,7 +52,7 @@ namespace GraphicsProject.Classes.Binarisation
             Bh.Initialize(brush);
             var histogram = new Histogram((ImageBrush)brush);
 
-            var lut = BinarisationHelper.GetBlackPercentLut(percent, Bh.Width * Bh.Height, histogram.HistogramR);
+            var lut = BinarisationHelper.GetBlackPercentLut(percent, Bh.Width * Bh.Height, histogram.HistogramAv);
 
             for (var i = 0; i < Bh.Length; i += 4)
             {
@@ -66,6 +66,12 @@ namespace GraphicsProject.Classes.Binarisation
             }
 
             await Bh.UpdateBrush();
+        }
+
+        public static void PerformOtsu(this Brush brush)
+        {
+            int threshold = BinarisationHelper.GetOtsuThreshold((ImageBrush) brush);
+            MakeManualBinarisation(brush, threshold);
         }
     }
 }
