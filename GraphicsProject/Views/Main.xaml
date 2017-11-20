@@ -53,6 +53,15 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <AppBarButton Icon="SelectAll" Label="Binaryzacja">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Ręczna" Click="ManualBinarisation_OnClick"/>
+                        <MenuFlyoutItem Text="Rozszerzenie" Click="HistogramStretching_OnClick"/>
+                        <MenuFlyoutItem Text="Wyrównanie" Click="HistogramEqualisation_OnClick"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
         </StackPanel>
 
         <Grid Grid.Row="1" Background="Gray">

@@ -95,6 +95,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Binarisation\BinarisationHelper.cs" />
+    <Compile Include="Classes\Binarisation\BrushBinarisationExtension.cs" />
     <Compile Include="Classes\ColorPicker\ColorConverter.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.cs" />
     <Compile Include="Classes\ColorPicker\ColorPickerViewModel.generated.cs" />
@@ -130,6 +132,9 @@
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ManualBinarisation.xaml.cs">
+      <DependentUpon>ManualBinarisation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PixelManipulation.xaml.cs">
       <DependentUpon>PixelManipulation.xaml</DependentUpon>
     </Compile>
@@ -173,6 +178,10 @@
     <Page Include="Views\Main.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ManualBinarisation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PixelManipulation.xaml">
       <SubType>Designer</SubType>

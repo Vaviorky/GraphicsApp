@@ -30,7 +30,7 @@ namespace GraphicsProject.Views
         public HistogramType HistogramType = HistogramType.Red;
         public int[] Lut { get; private set; }
 
-        private ImageBrush _origin;
+        private readonly ImageBrush _origin;
 
         public HistogramStretching(ImageBrush image)
         {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -13,6 +14,7 @@ using GraphicsProject.Classes.ColorPicker;
 using GraphicsProject.Classes.ImageManagement;
 using GraphicsProject.Classes.Shapes;
 using GraphicsProject.Classes;
+using GraphicsProject.Classes.Binarisation;
 using GraphicsProject.Classes.Histograms;
 using GraphicsProject.Classes.ImageProcessing;
 using GraphicsProject.Enums;
@@ -522,9 +524,7 @@ namespace GraphicsProject.Views
         {
             DrawingCanvas.Background.GaussFilter();
         }
-
-
-
+        
         #endregion
 
         #region Histograms
@@ -561,5 +561,29 @@ namespace GraphicsProject.Views
         }
 
         #endregion
+
+        #region Binarisation
+
+        private async void ManualBinarisation_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!DrawingCanvas.Background.IsGrayscaled())
+            {
+                var dialog = new MessageDialog("Obraz musi być czarno-biały!", "Błąd");
+                await dialog.ShowAsync();
+                return;
+            }
+
+            var mb = new ManualBinarisation((ImageBrush) DrawingCanvas.Background);
+            var result = await mb.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.MakeBinarisation(mb.Threshold);
+            }
+        }
+
+        #endregion
+
+
     }
 }
