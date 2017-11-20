@@ -16,7 +16,7 @@ namespace GraphicsProject.Classes.Binarisation
             var wb = (WriteableBitmap)image.ImageSource;
             var data = wb.PixelBuffer.ToArray();
 
-            for (var i = 0; i < data.Length; i+=4)
+            for (var i = 0; i < data.Length; i += 4)
             {
                 var oldPixelValue = data[i];
                 var value = oldPixelValue <= threshold ? 0 : 255;
@@ -36,6 +36,22 @@ namespace GraphicsProject.Classes.Binarisation
             newImage.ImageSource = newWb;
 
             return newImage;
+        }
+
+        public static int[] GetBlackPercentLut(int percent, int size, int[] histogram)
+        {
+            int[] lut = new int[256];
+            int sum = 0;
+            int threshold = (int)(percent * size * 0.01);
+            for (int i = 0; i < lut.Length; i++)
+            {
+                sum += histogram[i];
+                if (sum >= threshold)
+                {
+                    lut[i] = 255;
+                }
+            }
+            return lut;
         }
     }
 }

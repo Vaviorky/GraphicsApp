@@ -57,7 +57,7 @@
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Ręczna" Click="ManualBinarisation_OnClick"/>
-                        <MenuFlyoutItem Text="Rozszerzenie" Click="HistogramStretching_OnClick"/>
+                        <MenuFlyoutItem Text="% Selekcja czarnego" Click="PercentBlackSelection_OnClick"/>
                         <MenuFlyoutItem Text="Wyrównanie" Click="HistogramEqualisation_OnClick"/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>

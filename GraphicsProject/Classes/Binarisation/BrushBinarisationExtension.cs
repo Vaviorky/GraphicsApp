@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
+using GraphicsProject.Classes.Histograms;
 
 namespace GraphicsProject.Classes.Binarisation
 {
@@ -29,7 +30,7 @@ namespace GraphicsProject.Classes.Binarisation
             return true;
         }
 
-        public static async void MakeBinarisation(this Brush brush, int threshold)
+        public static async void MakeManualBinarisation(this Brush brush, int threshold)
         {
             Bh.Initialize(brush);
 
@@ -41,6 +42,27 @@ namespace GraphicsProject.Classes.Binarisation
                 Bh.Pixels[i + 2] = (byte)value;
                 Bh.Pixels[i + 1] = (byte)value;
                 Bh.Pixels[i] = (byte)value;
+            }
+
+            await Bh.UpdateBrush();
+        }
+
+        public static async void PercentBlackSelectionBinarisation(this Brush brush, int percent)
+        {
+            Bh.Initialize(brush);
+            var histogram = new Histogram((ImageBrush)brush);
+
+            var lut = BinarisationHelper.GetBlackPercentLut(percent, Bh.Width * Bh.Height, histogram.HistogramR);
+
+            for (var i = 0; i < Bh.Length; i += 4)
+            {
+                var r = Bh.Pixels[i + 2];
+                var g = Bh.Pixels[i + 1];
+                var b = Bh.Pixels[i];
+
+                Bh.Pixels[i + 2] = (byte)lut[r];
+                Bh.Pixels[i + 1] = (byte)lut[g];
+                Bh.Pixels[i] = (byte)lut[b];
             }
 
             await Bh.UpdateBrush();

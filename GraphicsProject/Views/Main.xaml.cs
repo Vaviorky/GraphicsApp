@@ -524,14 +524,14 @@ namespace GraphicsProject.Views
         {
             DrawingCanvas.Background.GaussFilter();
         }
-        
+
         #endregion
 
         #region Histograms
 
         private async void ShowHistogram_OnClick(object sender, RoutedEventArgs e)
         {
-            var img = (ImageBrush) DrawingCanvas.Background;
+            var img = (ImageBrush)DrawingCanvas.Background;
             img.Stretch = Stretch.None;
 
             var histogramWindow = new HistogramWindow(img)
@@ -551,7 +551,7 @@ namespace GraphicsProject.Views
 
         private async void HistogramStretching_OnClick(object sender, RoutedEventArgs e)
         {
-            var hs = new HistogramStretching((ImageBrush) DrawingCanvas.Background);
+            var hs = new HistogramStretching((ImageBrush)DrawingCanvas.Background);
             var result = await hs.ShowAsync();
 
             if (result == ContentDialogResult.Primary)
@@ -573,17 +573,34 @@ namespace GraphicsProject.Views
                 return;
             }
 
-            var mb = new ManualBinarisation((ImageBrush) DrawingCanvas.Background);
+            var mb = new ManualBinarisation((ImageBrush)DrawingCanvas.Background);
             var result = await mb.ShowAsync();
 
             if (result == ContentDialogResult.Primary)
             {
-                DrawingCanvas.Background.MakeBinarisation(mb.Threshold);
+                DrawingCanvas.Background.MakeManualBinarisation(mb.Threshold);
+            }
+        }
+
+        private async void PercentBlackSelection_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!DrawingCanvas.Background.IsGrayscaled())
+            {
+                var dialog = new MessageDialog("Obraz musi być czarno-biały!", "Błąd");
+                await dialog.ShowAsync();
+                return;
+            }
+
+            var pbs = new PercentBlackSelection();
+            var result = await pbs.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.PercentBlackSelectionBinarisation(pbs.PercentValue);
             }
         }
 
         #endregion
-
 
     }
 }

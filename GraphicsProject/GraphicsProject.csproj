@@ -135,6 +135,9 @@
     <Compile Include="Views\ManualBinarisation.xaml.cs">
       <DependentUpon>ManualBinarisation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PercentBlackSelection.xaml.cs">
+      <DependentUpon>PercentBlackSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PixelManipulation.xaml.cs">
       <DependentUpon>PixelManipulation.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ManualBinarisation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PercentBlackSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
