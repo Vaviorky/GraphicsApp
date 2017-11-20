@@ -113,6 +113,7 @@
     <Compile Include="Classes\Shapes\ShapeManager.cs" />
     <Compile Include="Classes\Shapes\ShapeResizer.cs" />
     <Compile Include="Classes\Shapes\ShapePointer.cs" />
+    <Compile Include="Enums\HistogramType.cs" />
     <Compile Include="Enums\ImageLoadError.cs" />
     <Compile Include="Enums\ShapeMouseEventType.cs" />
     <Compile Include="Enums\ShapeType.cs" />
@@ -184,9 +185,6 @@
     </PackageReference>
     <PackageReference Include="Prism.Mvvm">
       <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms">
-      <Version>2.3.4.247</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

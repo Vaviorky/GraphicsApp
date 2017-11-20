@@ -549,9 +549,15 @@ namespace GraphicsProject.Views
             DrawingCanvas.Background.EqualizeHistogram();
         }
 
-        private void HistogramStretching_OnClick(object sender, RoutedEventArgs e)
+        private async void HistogramStretching_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var hs = new HistogramStretching((ImageBrush) DrawingCanvas.Background);
+            var result = await hs.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DrawingCanvas.Background.StretchHistogram(hs.Lut, hs.HistogramType);
+            }
         }
 
         #endregion
